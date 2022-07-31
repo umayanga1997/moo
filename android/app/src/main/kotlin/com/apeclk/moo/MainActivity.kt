@@ -1,4 +1,4 @@
-package com.example.moo
+package com.apeclk.moo
 
 import io.flutter.embedding.android.FlutterActivity
 

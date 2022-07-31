@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
+import 'package:moo/services/firebase.dart';
 import 'package:moo/widgets/widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,8 +16,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -127,24 +133,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   items: languages,
                   widgetType: WidgetType.textbutton,
                 ),
-                MasonryGridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
-                  shrinkWrap: true,
-                  itemCount: movies.length,
-                  padding: const EdgeInsets.all(10),
-                  physics: const NeverScrollableScrollPhysics(),
-                  addAutomaticKeepAlives: true,
-                  itemBuilder: (context, index) {
-                    return MovieCard(
-                      image: movies[index]["image"].toString(),
-                      title: movies[index]["title"].toString(),
-                      description:
-                          " is a best of movie that the movie of your best and best",
+                StreamBuilder(
+                  // stream: () {},
+                  builder: (context, snapshot) {
+                    return MasonryGridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 5,
+                      shrinkWrap: true,
+                      itemCount: movies.length,
+                      padding: const EdgeInsets.all(10),
+                      physics: const NeverScrollableScrollPhysics(),
+                      addAutomaticKeepAlives: true,
+                      itemBuilder: (context, index) {
+                        return MovieCard(
+                          image: movies[index]["image"].toString(),
+                          title: movies[index]["title"].toString(),
+                          description:
+                              " is a best of movie that the movie of your best and best",
+                        );
+                      },
                     );
                   },
-                )
+                ),
                 // GridView.builder(
                 //   itemCount: movies.length,
                 //   physics: const NeverScrollableScrollPhysics(),
