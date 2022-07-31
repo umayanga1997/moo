@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
-import 'package:moo/services/firebase.dart';
 import 'package:moo/widgets/widget.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -92,10 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(width: 10.0),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.read<ThemeController>().changeTheme();
+                          },
                           icon: Icon(
                             // MdiIcons.lightbulbOn,
-                            Icons.dark_mode,
+                            context.watch<ThemeController>().isDark
+                                ? Icons.light_mode
+                                : Icons.dark_mode,
                             color: btnColor,
                             size: 27,
                           ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moo/controllers/category_controller.dart';
 import 'package:moo/controllers/language_controller.dart';
+import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/layouts/layout.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,10 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => LanguageController(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeController(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -45,6 +49,18 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
       ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        appBarTheme: const AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Color.fromARGB(255, 58, 58, 58),
+            statusBarIconBrightness: Brightness.light,
+          ),
+        ),
+      ),
+      themeMode: context.watch<ThemeController>().isDark
+          ? ThemeMode.dark
+          : ThemeMode.light,
       home: const Layout(),
       debugShowCheckedModeBanner: false,
     );
