@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "662030551684",
+    "project_id": "moo-app-95248",
+    "storage_bucket": "moo-app-95248.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662030551684:android:46bec3e2d96c44820610d1",
+        "android_client_info": {
+          "package_name": "com.apeclk.moo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662030551684-ib7fth75sas48auceupgbkhfsu7hov8r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apeclk.moo",
+            "certificate_hash": "a85e1c1f24a21056a9ba27ccb58543c51bd0d13e"
+          }
+        },
+        {
+          "client_id": "662030551684-ui2c2j3b26vohdtk9206bhqfv05srnik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu2ILnbQHH457sH2EXHeIKLGv_p1NM8XY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "662030551684-ui2c2j3b26vohdtk9206bhqfv05srnik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
