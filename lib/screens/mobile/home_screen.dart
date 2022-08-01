@@ -156,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: movies[index]["title"].toString(),
                           description:
                               " is a best of movie that the movie of your best and best",
+                          index: index.toString(),
                         );
                       },
                     );
