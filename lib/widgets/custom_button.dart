@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 
-class DownloadButton extends StatelessWidget {
-  const DownloadButton({Key? key}) : super(key: key);
+class CustomButton extends StatelessWidget {
+  final String name;
+  final Function onPressed;
+  final dynamic bgcolor;
+  final dynamic fontcolor;
+  const CustomButton(
+      {Key? key,
+      required this.name,
+      required this.onPressed,
+      this.bgcolor,
+      this.fontcolor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +26,14 @@ class DownloadButton extends StatelessWidget {
         child: SizedBox(
           width: size.width / 2,
           child: OutlinedButton(
-            onPressed: () {},
+            onPressed: () => onPressed(),
             clipBehavior: Clip.antiAlias,
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 25,
               ),
-              backgroundColor: Colors.white,
+              backgroundColor: bgcolor ?? Colors.white,
               alignment: Alignment.center,
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -36,10 +46,10 @@ class DownloadButton extends StatelessWidget {
               ),
             ),
             child: Text(
-              'Download',
+              name,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: btnColor,
+                color: fontcolor ?? btnColor,
                 fontSize: mf,
               ),
             ),

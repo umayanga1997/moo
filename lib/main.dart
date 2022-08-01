@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:moo/controllers/category_controller.dart';
 import 'package:moo/controllers/language_controller.dart';
 import 'package:moo/controllers/theme_controller.dart';
+import 'package:moo/helper/colors.dart';
 import 'package:moo/layouts/layout.dart';
 import 'package:provider/provider.dart';
 
@@ -35,10 +36,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Moo',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           elevation: 2,
-          systemOverlayStyle: SystemUiOverlayStyle(
+          iconTheme: IconThemeData(
+            color: btnColor,
+          ),
+          actionsIconTheme: IconThemeData(
+            color: btnColor,
+          ),
+          systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.white,
             statusBarBrightness: Brightness.light,
             statusBarIconBrightness: Brightness.dark,

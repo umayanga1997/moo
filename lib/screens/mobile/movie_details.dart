@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moo/helper/fonts.dart';
-import 'package:moo/widgets/download_button.dart';
 import 'package:moo/widgets/widget.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
@@ -66,7 +65,10 @@ class MovieDetailsScreen extends StatelessWidget {
                 value:
                     'This movie is very romance movie that giving the truth of message for our life.',
               ),
-              const DownloadButton(),
+              CustomButton(
+                name: 'Download',
+                onPressed: () {},
+              ),
               Padding(
                 padding: const EdgeInsets.only(
                   bottom: 60,

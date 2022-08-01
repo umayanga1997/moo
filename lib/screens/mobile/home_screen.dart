@@ -5,6 +5,7 @@ import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
+import 'package:moo/screens/mobile/movie_add_screen.dart';
 import 'package:moo/widgets/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -101,6 +102,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             context.watch<ThemeController>().isDark
                                 ? Icons.light_mode
                                 : Icons.dark_mode,
+                            color: btnColor,
+                            size: 27,
+                          ),
+                          splashRadius: 28,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MovieAddScreen(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.add,
                             color: btnColor,
                             size: 27,
                           ),
