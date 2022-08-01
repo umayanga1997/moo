@@ -80,6 +80,7 @@ class MovieDetailsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: mf,
                       color: Colors.grey,
+                      decoration: TextDecoration.none,
                     ),
                     textAlign: TextAlign.center,
                   ),
