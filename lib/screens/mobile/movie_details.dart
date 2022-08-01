@@ -1,7 +1,4 @@
-import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/widgets/download_button.dart';
 import 'package:moo/widgets/widget.dart';
@@ -16,15 +13,15 @@ class MovieDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: index,
-      transitionOnUserGestures: true,
-      flightShuttleBuilder: (flightContext, animation, flightDirection,
-          fromHeroContext, toHeroContext) {
-        return Transform(
-          transform: Matrix4.identity()..rotateY(-pi * animation.value),
-          alignment: FractionalOffset.center,
-          child: fromHeroContext.widget,
-        );
-      },
+      // transitionOnUserGestures: true,
+      // flightShuttleBuilder: (flightContext, animation, flightDirection,
+      //     fromHeroContext, toHeroContext) {
+      //   return Transform(
+      //     transform: Matrix4.identity()..rotateX(-pi * animation.value),
+      //     alignment: FractionalOffset.center,
+      //     child: fromHeroContext.widget,
+      //   );
+      // },
       child: Container(
         color: Colors.white,
         child: SingleChildScrollView(
