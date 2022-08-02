@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
+import 'package:moo/helper/help_functions.dart';
 
 class FileCard extends StatelessWidget {
-  final File? file;
+  final PlatformFile? file;
   final String? fileUrl;
   final bool isImg;
   final String name;
@@ -37,7 +39,7 @@ class FileCard extends StatelessWidget {
               ),
             ),
           ),
-          file?.path == "" && fileUrl == null
+          file?.path == null && fileUrl == null
               ? Positioned(
                   child: Text(
                     name,
@@ -49,24 +51,49 @@ class FileCard extends StatelessWidget {
                 )
               : fileUrl != null
                   ? isImg
-                      ? Image.network(
-                          fileUrl ?? "",
-                          width: double.infinity,
-                          fit: BoxFit.contain,
+                      ? Card(
+                          clipBehavior: Clip.hardEdge,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          margin: const EdgeInsets.all(0),
+                          child: Image.network(
+                            fileUrl ?? "",
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
                         )
                       : Text(
-                          'Download\nURL\navailable',
+                          'File\nAvailable',
                           style: TextStyle(
                             color: btnColor,
                             fontSize: mf,
                           ),
                           textAlign: TextAlign.center,
                         )
-                  : Image.file(
-                      file!,
-                      width: double.infinity,
-                      fit: BoxFit.contain,
-                    ),
+                  : isImg
+                      ? Card(
+                          clipBehavior: Clip.hardEdge,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          margin: const EdgeInsets.all(0),
+                          child: Image.file(
+                            File(file?.path ?? ""),
+                            fit: BoxFit.fill,
+                            width: 100,
+                            height: 100,
+                          ),
+                        )
+                      : Text(
+                          'File\nSelected\n${formatBytes(file!.size, 2)}',
+                          style: TextStyle(
+                            color: btnColor,
+                            fontSize: mf,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
@@ -27,21 +27,37 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   String _category = '';
   String _language = '';
 
-  final File _thumbnailFile = File('');
-  final File _movieFile = File('');
+  PlatformFile? _thumbnailFile;
+  PlatformFile? _movieFile;
 
   @override
   void initState() {
     super.initState();
   }
 
-  void selectMovieFile() {
-    print('hi');
+  void selectMovieFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) _movieFile = result.files.single;
+    // Need to upload to google drive
+    setState(() {});
   }
 
-  void selectThumbnail() {
-    print('hi');
+  void selectThumbnail() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) _thumbnailFile = result.files.single;
+    // Need to convert result as Uint8List to upload to firebase storage
+    setState(() {});
   }
+
+  void saveData() {}
+  void updateData() {}
+
+  void deleteData() {}
+
+  void uploadfile({String type = "tmb"}) {}
+  void deletefile({String type = "tmb"}) {}
+
+  void compressImage() {}
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +164,9 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                       width: double.infinity,
                       height: 100,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Expanded(
-                            flex: 1,
+                          Flexible(
                             child: FileCard(
                               onSelect: selectThumbnail,
                               name: 'Thumbnail',
@@ -159,8 +175,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                               isImg: true,
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
+                          Flexible(
                             child: FileCard(
                               onSelect: selectMovieFile,
                               name: 'Movie File',
