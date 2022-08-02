@@ -112,7 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const MovieAddScreen(),
+                                builder: (context) => const MovieAddScreen(
+                                  movieModel: null,
+                                ),
                               ),
                             );
                           },
@@ -174,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           description:
                               " is a best of movie that the movie of your best and best",
                           index: index.toString(),
+                          movieModel: null,
                         );
                       },
                     );

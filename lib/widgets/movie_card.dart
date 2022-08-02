@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
+import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
 import 'package:moo/screens/mobile/movie_details.dart';
 
@@ -10,12 +11,14 @@ class MovieCard extends StatelessWidget {
   final String title;
   final String description;
   final String index;
+  final MovieModel? movieModel;
   const MovieCard({
     Key? key,
     required this.image,
     required this.title,
     required this.description,
     required this.index,
+    required this.movieModel,
   }) : super(key: key);
 
   @override
@@ -114,8 +117,9 @@ class MovieCard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MovieAddScreen(
+                          builder: (context) => MovieAddScreen(
                             isUpdate: true,
+                            movieModel: movieModel,
                           ),
                         ),
                       );

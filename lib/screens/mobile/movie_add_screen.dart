@@ -1,12 +1,17 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
+import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
-import 'package:moo/widgets/select_field.dart';
+import 'package:moo/models/movie_model.dart';
 import 'package:moo/widgets/widget.dart';
 
 class MovieAddScreen extends StatefulWidget {
   final bool isUpdate;
-  const MovieAddScreen({Key? key, this.isUpdate = false}) : super(key: key);
+  final MovieModel? movieModel;
+  const MovieAddScreen(
+      {Key? key, this.isUpdate = false, required this.movieModel})
+      : super(key: key);
 
   @override
   State<MovieAddScreen> createState() => _MovieAddScreenState();
@@ -19,10 +24,24 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   final TextEditingController _yearEditController = TextEditingController();
   final TextEditingController _directorEditController = TextEditingController();
   final TextEditingController _actorsEditController = TextEditingController();
-  final String _category = '';
-  final String _language = '';
-  final String _thumbURl = '';
-  final String _fileDownloadUrl = '';
+  String _category = '';
+  String _language = '';
+
+  final File _thumbnailFile = File('');
+  final File _movieFile = File('');
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void selectMovieFile() {
+    print('hi');
+  }
+
+  void selectThumbnail() {
+    print('hi');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +100,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
               }).toList(),
               onChanged: (value) {
                 var data = value.toString().substring(0, 2);
-                print(data);
+                _category = data;
               },
             ),
             SelectField(
@@ -98,7 +117,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
               }).toList(),
               onChanged: (value) {
                 var data = value.toString().substring(0, 2);
-                print(data);
+                _language = data;
               },
             ),
             InputField(
@@ -109,6 +128,53 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
               textEditingController: _actorsEditController,
               hintText: "Actors",
               maxLines: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Files',
+                    style: TextStyle(
+                      color: fcolorGrey,
+                      fontSize: mf,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 100,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: FileCard(
+                              onSelect: selectThumbnail,
+                              name: 'Thumbnail',
+                              file: _thumbnailFile,
+                              fileUrl: widget.movieModel?.thumbnailURl,
+                              isImg: true,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: FileCard(
+                              onSelect: selectMovieFile,
+                              name: 'Movie File',
+                              file: _movieFile,
+                              fileUrl: widget.movieModel?.downloadURL,
+                              isImg: false,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 30,
