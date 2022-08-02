@@ -72,7 +72,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => widget.isUpdate ? updateData() : saveData(),
             icon: const Icon(
               Icons.done_all,
               size: 26,
