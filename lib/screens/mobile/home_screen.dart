@@ -6,6 +6,7 @@ import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
+import 'package:moo/services/firebase.dart';
 import 'package:moo/widgets/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -120,6 +121,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           icon: Icon(
                             Icons.add,
+                            color: btnColor,
+                            size: 27,
+                          ),
+                          splashRadius: 28,
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            await auth.signOut();
+                            await googleSignIn.signOut();
+                          },
+                          icon: Icon(
+                            Icons.logout,
                             color: btnColor,
                             size: 27,
                           ),
