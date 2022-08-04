@@ -14,7 +14,7 @@ import 'package:moo/widgets/widget.dart';
 class MovieDetailsScreen extends StatefulWidget {
   final String image;
   final String index;
-  final MovieModel movie;
+  final MovieModel? movie;
   const MovieDetailsScreen(
       {Key? key, required this.image, required this.index, required this.movie})
       : super(key: key);
@@ -108,7 +108,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   var dio = Dio();
                   String token = "f5e2b7a7c14adfbb2dff95241e44d4699a9vp";
                   final response = await dio.get(
-                      'https://uptobox.com/api/link?token=$token&file_code=${widget.movie.downloadID}');
+                      'https://uptobox.com/api/link?token=$token&file_code=${widget.movie!.downloadID}');
 
                   Directory dir = Directory('/storage/emulated/0/Download');
                   var status = await Permission.storage.status;
@@ -122,7 +122,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     final taskId = await FlutterDownloader.enqueue(
                       url: datamodel.data!.dlLink!,
                       savedDir: dir.path,
-                      fileName: widget.movie.movieDownloadName,
+                      fileName: widget.movie!.movieDownloadName,
                       showNotification:
                           true, // show download progress in status bar (for Android)
                       openFileFromNotification:

@@ -30,7 +30,7 @@ class MovieCard extends StatelessWidget {
             builder: (context) => MovieDetailsScreen(
               image: image,
               index: index,
-              movie: movieModel!,
+              movie: movieModel,
             ),
           ),
         );
