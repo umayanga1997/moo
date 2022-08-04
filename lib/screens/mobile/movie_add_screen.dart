@@ -1,16 +1,14 @@
-import 'dart:io';
-
+// import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
 import 'package:moo/models/movie_model.dart';
-import 'package:moo/services/drive.dart';
-import 'package:googleapis/drive/v3.dart' as ga;
-import 'package:moo/services/firebase.dart';
-import 'package:path/path.dart' as path;
+// import 'package:moo/services/drive.dart';
+// import 'package:googleapis/drive/v3.dart' as ga;
+// import 'package:moo/services/firebase.dart';
+// import 'package:path/path.dart' as path;
 import 'package:moo/widgets/widget.dart';
 
 class MovieAddScreen extends StatefulWidget {
@@ -34,39 +32,33 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   String _category = '';
   String _language = '';
 
-  // GoogleSignIn _googleSignIn = GoogleSignIn(
-  //     // scopes: <String>[
-  //     //   'https://www.googleapis.com/auth/drive',
-  //     // ],
-  //     );
-
   PlatformFile? _thumbnailFile;
   PlatformFile? _movieFile;
 
-  _uploadFileToGoogleDrive() async {
-    try {
-      // googleSignIn.onCurrentUserChanged
-      //     .listen((GoogleSignInAccount? googleSignInAccount) async {
-      //   if (googleSignInAccount != null) {}
-      // });
-      var client =
-          GoogleHttpClient(await googleSignIn.currentUser!.authHeaders);
-      var drive = ga.DriveApi(client);
-      ga.File fileToUpload = ga.File();
-      var file = File(_movieFile?.path ?? "");
-      fileToUpload.parents = ["appDataFolder"];
-      fileToUpload.name = path.basename(file.absolute.path);
-      var response = await drive.files.create(
-        fileToUpload,
-        uploadMedia: ga.Media(file.openRead(), file.lengthSync()),
-      );
-      print(response.id);
-    } catch (e) {
-      print(e);
-    }
+  // _uploadFileToGoogleDrive() async {
+  //   try {
+  //     // googleSignIn.onCurrentUserChanged
+  //     //     .listen((GoogleSignInAccount? googleSignInAccount) async {
+  //     //   if (googleSignInAccount != null) {}
+  //     // });
+  //     var client =
+  //         GoogleHttpClient(await googleSignIn.currentUser!.authHeaders);
+  //     var drive = ga.DriveApi(client);
+  //     ga.File fileToUpload = ga.File();
+  //     var file = File(_movieFile?.path ?? "");
+  //     fileToUpload.parents = ["appDataFolder"];
+  //     fileToUpload.name = path.basename(file.absolute.path);
+  //     var response = await drive.files.create(
+  //       fileToUpload,
+  //       uploadMedia: ga.Media(file.openRead(), file.lengthSync()),
+  //     );
+  //     print(response.id);
+  //   } catch (e) {
+  //     print(e);
+  //   }
 
-    // _listGoogleDriveFiles();
-  }
+  //   // _listGoogleDriveFiles();
+  // }
 
   @override
   void initState() {
@@ -87,9 +79,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
     setState(() {});
   }
 
-  void saveData() {
-    _uploadFileToGoogleDrive();
-  }
+  void saveData() {}
 
   void updateData() {}
 
@@ -212,7 +202,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                               onSelect: selectThumbnail,
                               name: 'Thumbnail',
                               file: _thumbnailFile,
-                              fileUrl: widget.movieModel?.thumbnailURl,
+                              fileUrl: widget.movieModel!.thumbnailURl,
                               isImg: true,
                             ),
                           ),
@@ -221,7 +211,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                               onSelect: selectMovieFile,
                               name: 'Movie File',
                               file: _movieFile,
-                              fileUrl: widget.movieModel?.downloadURL,
+                              fileUrl: widget.movieModel!.downloadID,
                               isImg: false,
                             ),
                           ),

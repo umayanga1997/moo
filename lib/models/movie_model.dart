@@ -7,7 +7,8 @@ class MovieModel {
   String? language;
   String? director;
   String? actors;
-  String? downloadURL;
+  String? movieDownloadName;
+  String? downloadID;
   MovieModel({
     required this.name,
     required this.description,
@@ -17,7 +18,8 @@ class MovieModel {
     required this.language,
     required this.director,
     required this.actors,
-    required this.downloadURL,
+    required this.movieDownloadName,
+    required this.downloadID,
   });
 
   Map<String, String> toJson() {
@@ -30,7 +32,8 @@ class MovieModel {
     data['language'] = language ?? '';
     data['director'] = director ?? '';
     data['actors'] = actors ?? '';
-    data['downloadURL'] = downloadURL ?? '';
+    data['movieDownloadName'] = movieDownloadName ?? '';
+    data['downloadID'] = downloadID ?? '';
     return data;
   }
 
@@ -43,6 +46,7 @@ class MovieModel {
     language = json['language'];
     director = json['director'];
     actors = json['actors'];
-    downloadURL = json['downloadURL'];
+    movieDownloadName = json['movieDownloadName'];
+    downloadID = json['downloadID'];
   }
 }
