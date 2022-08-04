@@ -24,16 +24,19 @@ class DownloadDataModel {
 
 class Data {
   String? dlLink;
+  String? waitingToken;
 
   Data({this.dlLink});
 
   Data.fromJson(Map<String, dynamic> json) {
     dlLink = json['dlLink'];
+    waitingToken = json['waitingToken'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['dlLink'] = dlLink!;
+    data['waitingToken'] = waitingToken!;
     return data;
   }
 }

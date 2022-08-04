@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/models/movie_model.dart';
+import 'package:moo/screens/mobile/player_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:moo/models/download_data_model.dart';
 import 'package:moo/widgets/widget.dart';
+import 'package:video_player/video_player.dart';
 // import 'package:video_player/video_player.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
@@ -24,21 +26,31 @@ class MovieDetailsScreen extends StatefulWidget {
 }
 
 class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
-  // late VideoPlayerController? _videoPlayerController;
+  DownloadDataModel? downloadDataModel;
   @override
   void initState() {
     super.initState();
-    // _videoPlayerController = VideoPlayerController.network(
-    //     "https://drive.google.com/file/d/19U4LjSZT6WEZ4HVitt5frZXQLhVHNmci/preview")
-    //   ..addListener(() => setState(() {}))
-    //   ..setLooping(true)
-    //   ..initialize().then((value) => _videoPlayerController?.play());
+    generateDownloadURl();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    // _videoPlayerController?.dispose();
+  generateDownloadURl() async {
+    var dio = Dio();
+    String token = "f5e2b7a7c14adfbb2dff95241e44d4699a9vp";
+    final downloadURLRespose = await dio.get(
+        'https://uptobox.com/api/link?token=$token&file_code=${'d3j5br62buy6'}');
+    downloadDataModel =
+        DownloadDataModel.fromJson(jsonDecode(downloadURLRespose.data));
+    if (downloadDataModel!.statusCode == 16) {
+      Future.delayed(
+        const Duration(seconds: 30),
+        () async {
+          final newRes = await dio.get(
+              'https://uptobox.com/api/link?token=$token&file_code=${'d3j5br62buy6'}&waitingToken=${downloadDataModel!.data!.waitingToken}');
+          downloadDataModel =
+              DownloadDataModel.fromJson(jsonDecode(newRes.data));
+        },
+      );
+    }
   }
 
   @override
@@ -69,10 +81,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 fit: BoxFit.contain,
                 alignment: Alignment.topCenter,
               ),
-              // _videoPlayerController != null &&
-              //         _videoPlayerController!.value.isInitialized
-              //     ? VideoPlayer(_videoPlayerController!)
-              //     : const CircularProgressIndicator(),
               const DetailCard(
                 title: "Name of the movie",
                 value: 'Chello Chello',
@@ -105,24 +113,28 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               CustomButton(
                 name: 'Download',
                 onPressed: () async {
-                  var dio = Dio();
-                  String token = "f5e2b7a7c14adfbb2dff95241e44d4699a9vp";
-                  final response = await dio.get(
-                      'https://uptobox.com/api/link?token=$token&file_code=${widget.movie!.downloadID}');
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PlayerScreen(url: downloadDataModel!.data!.dlLink),
+                    ),
+                  );
+                },
+              ),
+              CustomButton(
+                name: 'Download',
+                onPressed: () async {
                   Directory dir = Directory('/storage/emulated/0/Download');
                   var status = await Permission.storage.status;
                   if (status.isDenied) {
                     Permission.storage.request();
                   }
                   if (dir.path != "") {
-                    var datamodel =
-                        DownloadDataModel.fromJson(jsonDecode(response.data));
-
                     final taskId = await FlutterDownloader.enqueue(
-                      url: datamodel.data!.dlLink!,
+                      url: downloadDataModel!.data!.dlLink!,
                       savedDir: dir.path,
-                      fileName: widget.movie!.movieDownloadName,
+                      fileName: widget.movie?.movieDownloadName,
                       showNotification:
                           true, // show download progress in status bar (for Android)
                       openFileFromNotification:
