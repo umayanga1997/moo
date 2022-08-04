@@ -111,7 +111,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     'This movie is very romance movie that giving the truth of message for our life.',
               ),
               CustomButton(
-                name: 'Download',
+                name: 'Watch',
                 onPressed: () async {
                   Navigator.push(
                     context,

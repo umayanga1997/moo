@@ -1,5 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:moo/helper/colors.dart';
+import 'package:moo/helper/fonts.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wakelock/wakelock.dart';
 
 class PlayerScreen extends StatefulWidget {
   final String? url;
@@ -12,6 +18,8 @@ class PlayerScreen extends StatefulWidget {
 class _PlayerScreenState extends State<PlayerScreen> {
   late VideoPlayerController? _videoPlayerController;
 
+  bool isButtons = false;
+
   @override
   void initState() {
     super.initState();
@@ -21,24 +29,193 @@ class _PlayerScreenState extends State<PlayerScreen> {
       ..initialize().then((value) => _videoPlayerController?.play());
   }
 
+  String getCurrentPosition() {
+    final duration = Duration(
+        milliseconds:
+            _videoPlayerController!.value.position.inMilliseconds.round());
+
+    return [duration.inHours, duration.inMinutes, duration.inSeconds]
+        .map((e) => e.remainder(60).toString().padLeft(2, '0'))
+        .join(':');
+  }
+
+  Future setLandscape() async {
+    await SystemChrome.setEnabledSystemUIOverlays([]);
+    await SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    Wakelock.enable();
+  }
+
+  Future setOrientation() async {
+    await SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    Wakelock.disable();
+  }
+
   @override
   void dispose() {
     super.dispose();
+    setOrientation();
     _videoPlayerController?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
+    return SafeArea(
       child: _videoPlayerController != null &&
               _videoPlayerController!.value.isInitialized
-          ? VideoPlayer(_videoPlayerController!)
-          : const SizedBox(
-              height: 30,
-              width: 30,
-              child: CircularProgressIndicator(),
+          ? Container(
+              color: Colors.white,
+              child: OrientationBuilder(builder: (context, orientation) {
+                final isPortrait = orientation == Orientation.portrait;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isButtons = !isButtons;
+                    });
+                    if (isButtons) {
+                      Future.delayed(
+                        const Duration(seconds: 5),
+                        () {
+                          setState(() {
+                            isButtons = false;
+                          });
+                        },
+                      );
+                    }
+                  },
+                  child: Stack(
+                    fit: isPortrait ? StackFit.loose : StackFit.expand,
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Stack(
+                        fit: isPortrait ? StackFit.loose : StackFit.expand,
+                        alignment: Alignment.topCenter,
+                        children: [
+                          AspectRatio(
+                            aspectRatio:
+                                _videoPlayerController!.value.aspectRatio,
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: _videoPlayerController!.value.size.width,
+                                height:
+                                    _videoPlayerController!.value.size.height,
+                                child: VideoPlayer(_videoPlayerController!),
+                              ),
+                            ),
+                          ),
+                          isButtons
+                              ? Positioned(
+                                  bottom: 20,
+                                  left: 10,
+                                  right: 10,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: fcolorGrey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          getCurrentPosition(),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            decoration: TextDecoration.none,
+                                            fontSize: mf,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  _videoPlayerController!
+                                                          .value.isPlaying
+                                                      ? _videoPlayerController!
+                                                          .pause()
+                                                      : _videoPlayerController!
+                                                          .play();
+                                                },
+                                                child: Icon(
+                                                  _videoPlayerController!
+                                                          .value.isPlaying
+                                                      ? Icons.stop_circle
+                                                      : Icons.play_arrow,
+                                                  size: 32,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: VideoProgressIndicator(
+                                                    _videoPlayerController!,
+                                                    allowScrubbing: true,
+                                                    colors: VideoProgressColors(
+                                                      playedColor: mainColor,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      bufferedColor:
+                                                          indicolorGrey,
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  isPortrait
+                                                      ? setLandscape()
+                                                      : setOrientation();
+                                                },
+                                                child: const Icon(
+                                                  Icons.fullscreen,
+                                                  size: 32,
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink()
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            )
+          : Container(
+              color: Colors.white,
+              child: const Center(
+                child: SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             ),
     );
   }
