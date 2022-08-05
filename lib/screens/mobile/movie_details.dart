@@ -206,7 +206,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 
                                 await dio.download(
                                   downloadDataModel!.data!.dlLink!,
-                                  '${dir.path}/${widget.movie?.movieDownloadName}',
+                                  '${dir.path}/${widget.movie?.name!.trim()}',
                                   cancelToken: _cancelToken,
                                   onReceiveProgress: (rcv, total) {
                                     msg =

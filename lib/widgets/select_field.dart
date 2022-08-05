@@ -4,11 +4,13 @@ class SelectField extends StatelessWidget {
   final List<DropdownMenuItem<String>> dataList;
   final String hintText;
   final Function(String?) onChanged;
+  final String Function(String?) validatorFunction;
   const SelectField(
       {Key? key,
       required this.dataList,
       required this.hintText,
-      required this.onChanged})
+      required this.onChanged,
+      required this.validatorFunction})
       : super(key: key);
 
   @override
@@ -16,6 +18,7 @@ class SelectField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: DropdownButtonFormField(
+        validator: validatorFunction,
         items: dataList,
         onChanged: onChanged,
         decoration: InputDecoration(

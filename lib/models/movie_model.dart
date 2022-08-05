@@ -1,4 +1,5 @@
 class MovieModel {
+  String? id;
   String? name;
   String? description;
   String? thumbnailURl;
@@ -10,6 +11,7 @@ class MovieModel {
   String? movieDownloadName;
   String? downloadID;
   MovieModel({
+    required this.id,
     required this.name,
     required this.description,
     required this.thumbnailURl,
@@ -19,11 +21,11 @@ class MovieModel {
     required this.director,
     required this.actors,
     required this.movieDownloadName,
-    required this.downloadID,
   });
 
   Map<String, String> toJson() {
     final Map<String, String> data = <String, String>{};
+    data['id'] = id ?? '';
     data['name'] = name ?? '';
     data['description'] = description ?? '';
     data['thumbnailURl'] = thumbnailURl ?? '';
@@ -33,11 +35,12 @@ class MovieModel {
     data['director'] = director ?? '';
     data['actors'] = actors ?? '';
     data['movieDownloadName'] = movieDownloadName ?? '';
-    data['downloadID'] = downloadID ?? '';
+
     return data;
   }
 
   MovieModel.fromJson(Map<String, String> json) {
+    id = json['id'];
     name = json['name'];
     description = json['description'];
     thumbnailURl = json['thumbnailURl'];
@@ -47,6 +50,5 @@ class MovieModel {
     director = json['director'];
     actors = json['actors'];
     movieDownloadName = json['movieDownloadName'];
-    downloadID = json['downloadID'];
   }
 }
