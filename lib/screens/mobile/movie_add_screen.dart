@@ -1,14 +1,10 @@
-// import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
 import 'package:moo/models/movie_model.dart';
-// import 'package:moo/services/drive.dart';
-// import 'package:googleapis/drive/v3.dart' as ga;
-// import 'package:moo/services/firebase.dart';
-// import 'package:path/path.dart' as path;
+import 'package:moo/services/firebase.dart';
 import 'package:moo/widgets/widget.dart';
 
 class MovieAddScreen extends StatefulWidget {
@@ -29,11 +25,12 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   final TextEditingController _yearEditController = TextEditingController();
   final TextEditingController _directorEditController = TextEditingController();
   final TextEditingController _actorsEditController = TextEditingController();
+  final TextEditingController _fileDownloadIdController =
+      TextEditingController();
   String _category = '';
   String _language = '';
 
   PlatformFile? _thumbnailFile;
-  PlatformFile? _movieFile;
 
   // _uploadFileToGoogleDrive() async {
   //   try {
@@ -65,12 +62,12 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
     super.initState();
   }
 
-  void selectMovieFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) _movieFile = result.files.single;
-    // Need to upload to google drive
-    setState(() {});
-  }
+  // void selectMovieFile() async {
+  //   FilePickerResult? result = await FilePicker.platform.pickFiles();
+  //   if (result != null) _movieFile = result.files.single;
+  //   // Need to upload to google drive
+  //   setState(() {});
+  // }
 
   void selectThumbnail() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -79,7 +76,14 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
     setState(() {});
   }
 
-  void saveData() {}
+  void saveData() {
+    try {
+      var docID = '0';
+      fireStore.collection('movies').doc(docID);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void updateData() {}
 
@@ -123,6 +127,10 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
             InputField(
               textEditingController: _nameEditController,
               hintText: "Name of the Movie",
+            ),
+            InputField(
+              textEditingController: _fileDownloadIdController,
+              hintText: "Download ID",
             ),
             InputField(
               textEditingController: _descriptionEditController,
@@ -195,26 +203,26 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                       width: double.infinity,
                       height: 100,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Flexible(
                             child: FileCard(
                               onSelect: selectThumbnail,
                               name: 'Thumbnail',
                               file: _thumbnailFile,
-                              fileUrl: widget.movieModel!.thumbnailURl,
+                              fileUrl: widget.movieModel?.thumbnailURl,
                               isImg: true,
                             ),
                           ),
-                          Flexible(
-                            child: FileCard(
-                              onSelect: selectMovieFile,
-                              name: 'Movie File',
-                              file: _movieFile,
-                              fileUrl: widget.movieModel!.downloadID,
-                              isImg: false,
-                            ),
-                          ),
+                          // Flexible(
+                          //   child: FileCard(
+                          //     onSelect: selectMovieFile,
+                          //     name: 'Movie File',
+                          //     file: _movieFile,
+                          //     fileUrl: widget.movieModel?.downloadID,
+                          //     isImg: false,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

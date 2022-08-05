@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moo/helper/colors.dart';
@@ -30,26 +28,40 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   String getCurrentPosition() {
-    final duration = Duration(
-        milliseconds:
-            _videoPlayerController!.value.position.inMilliseconds.round());
+    try {
+      final duration = Duration(
+          milliseconds:
+              _videoPlayerController!.value.position.inMilliseconds.round());
 
-    return [duration.inHours, duration.inMinutes, duration.inSeconds]
-        .map((e) => e.remainder(60).toString().padLeft(2, '0'))
-        .join(':');
+      return [duration.inHours, duration.inMinutes, duration.inSeconds]
+          .map((e) => e.remainder(60).toString().padLeft(2, '0'))
+          .join(':');
+    } catch (e) {
+      return "";
+    }
   }
 
   Future setLandscape() async {
-    await SystemChrome.setEnabledSystemUIOverlays([]);
-    await SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-    Wakelock.enable();
+    try {
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: []);
+      await SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      Wakelock.enable();
+    } catch (e) {
+      //
+    }
   }
 
   Future setOrientation() async {
-    await SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-    Wakelock.disable();
+    try {
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: SystemUiOverlay.values);
+      await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+      Wakelock.disable();
+    } catch (e) {
+      //
+    }
   }
 
   @override
@@ -70,18 +82,22 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 final isPortrait = orientation == Orientation.portrait;
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      isButtons = !isButtons;
-                    });
-                    if (isButtons) {
-                      Future.delayed(
-                        const Duration(seconds: 5),
-                        () {
-                          setState(() {
-                            isButtons = false;
-                          });
-                        },
-                      );
+                    try {
+                      setState(() {
+                        isButtons = !isButtons;
+                      });
+                      if (isButtons) {
+                        Future.delayed(
+                          const Duration(seconds: 5),
+                          () {
+                            setState(() {
+                              isButtons = false;
+                            });
+                          },
+                        );
+                      }
+                    } catch (e) {
+                      //
                     }
                   },
                   child: Stack(
@@ -144,12 +160,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  _videoPlayerController!
-                                                          .value.isPlaying
-                                                      ? _videoPlayerController!
-                                                          .pause()
-                                                      : _videoPlayerController!
-                                                          .play();
+                                                  try {
+                                                    _videoPlayerController!
+                                                            .value.isPlaying
+                                                        ? _videoPlayerController!
+                                                            .pause()
+                                                        : _videoPlayerController!
+                                                            .play();
+                                                  } catch (e) {
+                                                    //
+                                                  }
                                                 },
                                                 child: Icon(
                                                   _videoPlayerController!
