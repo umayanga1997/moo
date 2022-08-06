@@ -232,8 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   items: languages,
                   widgetType: WidgetType.textbutton,
                 ),
-                FutureBuilder<QuerySnapshot>(
-                  future: fireStore.collection('movies').get(),
+                StreamBuilder<QuerySnapshot>(
+                  stream: fireStore.collection('movies').snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Progressor();
