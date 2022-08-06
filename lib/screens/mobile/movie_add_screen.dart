@@ -438,19 +438,19 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
               const SizedBox(
                 height: 30,
               ),
-              _prcessing
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: Text(
-                        'Data Processing...',
-                        style: TextStyle(
-                          fontSize: mf,
-                          color: mainColor,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+              // _prcessing
+              //     ? Padding(
+              //         padding: const EdgeInsets.symmetric(vertical: 30.0),
+              //         child: Text(
+              //           'Data Processing...',
+              //           style: TextStyle(
+              //             fontSize: mf,
+              //             color: mainColor,
+              //           ),
+              //           textAlign: TextAlign.center,
+              //         ),
+              //       )
+              //     : const SizedBox.shrink(),
               widget.isUpdate
                   ? _prcessing
                       ? const SizedBox.shrink()

@@ -49,30 +49,8 @@ class FileCard extends StatelessWidget {
                     ),
                   ),
                 )
-              : fileUrl != null
+              : file?.path != null
                   ? isImg
-                      ? Card(
-                          clipBehavior: Clip.hardEdge,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          margin: const EdgeInsets.all(0),
-                          child: Image.network(
-                            fileUrl ?? "",
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Text(
-                          'File\nAvailable',
-                          style: TextStyle(
-                            color: btnColor,
-                            fontSize: mf,
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                  : isImg
                       ? Card(
                           clipBehavior: Clip.hardEdge,
                           shape: RoundedRectangleBorder(
@@ -88,6 +66,28 @@ class FileCard extends StatelessWidget {
                         )
                       : Text(
                           'File\nSelected\n${formatBytes(file!.size, 2)}',
+                          style: TextStyle(
+                            color: btnColor,
+                            fontSize: mf,
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                  : isImg
+                      ? Card(
+                          clipBehavior: Clip.hardEdge,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          margin: const EdgeInsets.all(0),
+                          child: Image.network(
+                            fileUrl ?? "",
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Text(
+                          'File\nAvailable',
                           style: TextStyle(
                             color: btnColor,
                             fontSize: mf,
