@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
@@ -70,6 +69,18 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   @override
   void initState() {
     super.initState();
+    widget.isUpdate ? initValues() : () {};
+  }
+
+  initValues() {
+    _nameEditController.text = widget.movieModel!.name!;
+    _descriptionEditController.text = widget.movieModel!.description!;
+    _yearEditController.text = widget.movieModel!.year!;
+    _directorEditController.text = widget.movieModel!.director!;
+    _actorsEditController.text = widget.movieModel!.actors!;
+    _fileDownloadIdController.text = widget.movieModel!.downloadID!;
+    _category = widget.movieModel!.category!;
+    _language = widget.movieModel!.language!;
   }
 
   void selectThumbnail() async {
@@ -216,7 +227,8 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
               : IconButton(
                   onPressed: () {
                     if (formKey.currentState!.validate() &&
-                        _thumbnailFile!.path != null) {
+                        (_thumbnailFile?.path! != null ||
+                            widget.movieModel?.thumbnailURl != null)) {
                       setState(() {
                         _prcessing = true;
                       });
@@ -297,6 +309,9 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     return null;
                   }),
               SelectField(
+                  currentItem: widget.isUpdate
+                      ? "$_category - ${findCategoryValue(_category)}"
+                      : null,
                   hintText: "Select a Category",
                   dataList: <String>[
                     ...categories.map(
@@ -319,6 +334,9 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     return null;
                   }),
               SelectField(
+                  currentItem: widget.isUpdate
+                      ? '$_language - ${findLanguageValue(_language)}'
+                      : null,
                   hintText: "Select a Language",
                   dataList: <String>[
                     ...languages.map(

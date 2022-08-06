@@ -1,3 +1,5 @@
+import 'package:moo/helper/help_functions.dart';
+
 class MovieModel {
   String? id;
   String? name;
@@ -9,6 +11,8 @@ class MovieModel {
   String? director;
   String? actors;
   String? downloadID;
+  String? catName;
+  String? lanName;
   MovieModel({
     required this.id,
     required this.name,
@@ -20,6 +24,8 @@ class MovieModel {
     required this.director,
     required this.actors,
     required this.downloadID,
+    required this.catName,
+    required this.lanName,
   });
 
   Map<String, String> toJson() {
@@ -35,6 +41,7 @@ class MovieModel {
     data['actors'] = actors ?? '';
     data['actors'] = actors ?? '';
     data['downloadID'] = downloadID ?? '';
+    data['catName'] = catName ?? '';
     return data;
   }
 
@@ -49,5 +56,7 @@ class MovieModel {
     director = json['director'];
     actors = json['actors'];
     downloadID = json['downloadID'];
+    catName = findCategoryValue(json['category']);
+    lanName = findLanguageValue(json['language']);
   }
 }

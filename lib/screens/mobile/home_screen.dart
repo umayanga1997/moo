@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moo/controllers/category_controller.dart';
 import 'package:moo/controllers/language_controller.dart';
+import 'package:moo/controllers/search_controller.dart';
 import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
@@ -22,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _serachController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -38,9 +41,36 @@ class _HomeScreenState extends State<HomeScreen> {
     return _movies;
   }
 
+  static List<MovieModel> filterMoviesWithValue(
+      List<MovieModel> _movies, String value) {
+    _movies = _movies
+        .where(
+          (element) =>
+              element.year!
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              element.name!
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              element.catName!
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              element.lanName!
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()),
+        )
+        .toList();
+
+    return _movies;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -82,32 +112,49 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(width: 10.0),
                         Expanded(
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(
-                                  color: btnColor,
-                                  style: BorderStyle.solid,
-                                  width: 0.5,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                  horizontal: 8.0,
-                                ),
-                                child: Text(
-                                  'Search...',
-                                  style: TextStyle(
-                                    fontSize: mf,
-                                  ),
-                                ),
-                              ),
+                          child: InputField(
+                            textEditingController: _serachController,
+                            padding: const EdgeInsets.all(0),
+                            hintText: "Search...",
+                            borderSide: BorderSide(
+                              color: btnColor,
+                              style: BorderStyle.solid,
+                              width: 0.7,
                             ),
+                            onChanged: (value) {
+                              context
+                                  .read<SearchController>()
+                                  .changeSearchValue(value);
+                            },
                           ),
                         ),
+                        // Expanded(
+                        //   child: GestureDetector(
+                        //     onTap: () {},
+                        //     child: Container(
+                        //       decoration: BoxDecoration(
+                        //         borderRadius: BorderRadius.circular(8.0),
+                        //         border: Border.all(
+                        //           color: btnColor,
+                        //           style: BorderStyle.solid,
+                        //           width: 0.5,
+                        //         ),
+                        //       ),
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.symmetric(
+                        //           vertical: 10.0,
+                        //           horizontal: 8.0,
+                        //         ),
+                        //         child: Text(
+                        //           'Search...',
+                        //           style: TextStyle(
+                        //             fontSize: mf,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         const SizedBox(width: 10.0),
                         IconButton(
                           onPressed: () {
@@ -205,6 +252,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.watch<LanguageController>().lanSearchKey;
 
                     snapData = filterMovies(snapData, cat, lan);
+
+                    // With search value filter
+                    String pureSearch =
+                        context.watch<SearchController>().searchKey ?? "";
+                    snapData = filterMoviesWithValue(snapData, pureSearch);
 
                     return snapData.isEmpty
                         ? Center(

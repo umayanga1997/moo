@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moo/controllers/category_controller.dart';
 import 'package:moo/controllers/language_controller.dart';
+import 'package:moo/controllers/search_controller.dart';
 import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/layouts/layout.dart';
@@ -24,6 +25,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => ThemeController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SearchController(),
         ),
       ],
       child: const MyApp(),

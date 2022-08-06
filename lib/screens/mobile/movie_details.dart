@@ -99,16 +99,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     _cancelToken?.cancel();
   }
 
-  String findCategoryValue(String key) {
-    int index = categories.indexWhere((element) => element.key == key);
-    return categories[index].title;
-  }
-
-  String findLanguageValue(String key) {
-    int index = languages.indexWhere((element) => element.key == key);
-    return languages[index].data;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Hero(

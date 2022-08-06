@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:moo/helper/colors.dart';
 
 class SelectField extends StatelessWidget {
   final List<DropdownMenuItem<String>> dataList;
   final String hintText;
+  final String? currentItem;
   final Function(String?) onChanged;
   final String? Function(String?) validatorFunction;
   const SelectField(
@@ -10,7 +12,8 @@ class SelectField extends StatelessWidget {
       required this.dataList,
       required this.hintText,
       required this.onChanged,
-      required this.validatorFunction})
+      required this.validatorFunction,
+      required this.currentItem})
       : super(key: key);
 
   @override
@@ -19,6 +22,7 @@ class SelectField extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10.0),
       child: DropdownButtonFormField(
         validator: validatorFunction,
+        value: currentItem,
         items: dataList,
         onChanged: onChanged,
         decoration: InputDecoration(
@@ -29,6 +33,11 @@ class SelectField extends StatelessWidget {
               const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              style: BorderStyle.solid,
+              width: 0.5,
+              color: fcolorGrey.withOpacity(0.7),
+            ),
           ),
         ),
       ),
