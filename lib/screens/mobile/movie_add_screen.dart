@@ -40,6 +40,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   bool _isThumbnailFile = true;
 
   bool _prcessing = false;
+  bool _dprcessing = false;
 
   // _uploadFileToGoogleDrive() async {
   //   try {
@@ -115,6 +116,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
         setState(() {
           _prcessing = false;
         });
+        clearFileds();
         successMessage(message: 'Data added successfully!');
       });
     } catch (e) {
@@ -169,14 +171,15 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
           .doc(widget.movieModel?.id)
           .delete()
           .then((value) {
-        setState(() {
-          _prcessing = false;
-        });
+        // setState(() {
+        //   _d_prcessing = false;
+        // });
+        Navigator.pop(context);
         successMessage(message: 'Data deleted successfully!');
       });
     } catch (e) {
       setState(() {
-        _prcessing = false;
+        _dprcessing = false;
       });
       errorMessage(message: e.toString());
     }
@@ -204,7 +207,17 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
     }
   }
 
-  void compressImage() {}
+  void clearFileds() {
+    _nameEditController.text = "";
+    _descriptionEditController.text = "";
+    _yearEditController.text = "";
+    _directorEditController.text = "";
+    _actorsEditController.text = "";
+    _fileDownloadIdController.text = "";
+    // _category = "";
+    // _language = "";
+    _thumbnailFile = null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -454,16 +467,26 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
               widget.isUpdate
                   ? _prcessing
                       ? const SizedBox.shrink()
-                      : CustomButton(
-                          icon: Icons.delete,
-                          iconColor: Colors.white,
-                          name: 'Delete',
-                          onPressed: () {
-                            deleteData();
-                          },
-                          bgcolor: Colors.red,
-                          fontcolor: Colors.white,
-                        )
+                      : _dprcessing
+                          ? const Padding(
+                              padding: EdgeInsets.only(
+                                top: 30.0,
+                              ),
+                              child: Progressor(),
+                            )
+                          : CustomButton(
+                              icon: Icons.delete,
+                              iconColor: Colors.white,
+                              name: 'Delete',
+                              onPressed: () {
+                                setState(() {
+                                  _dprcessing = true;
+                                });
+                                deleteData();
+                              },
+                              bgcolor: Colors.red,
+                              fontcolor: Colors.white,
+                            )
                   : const SizedBox.shrink(),
             ],
           ),
