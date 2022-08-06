@@ -4,7 +4,7 @@ class InputField extends StatelessWidget {
   final TextEditingController textEditingController;
   final String hintText;
   final int maxLines;
-  final String Function(String?) validatorFunction;
+  final String? Function(String?) validatorFunction;
   const InputField(
       {Key? key,
       required this.textEditingController,

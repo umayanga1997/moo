@@ -1,24 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/help_functions.dart';
+import 'package:moo/helper/raw_data.dart';
 import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/player_screen.dart';
+import 'package:moo/services/message.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:moo/models/download_data_model.dart';
 import 'package:moo/widgets/widget.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
-  final String image;
   final String index;
   final MovieModel? movie;
-  const MovieDetailsScreen(
-      {Key? key, required this.image, required this.index, required this.movie})
+  const MovieDetailsScreen({Key? key, required this.index, required this.movie})
       : super(key: key);
 
   @override
@@ -34,6 +34,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   bool isEnableDownloadLink = false;
   bool isDownloading = false;
   CancelToken? _cancelToken;
+  double progress = 0;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       dio = Dio();
       String token = "f5e2b7a7c14adfbb2dff95241e44d4699a9vp";
       final downloadURLRespose = await dio.get(
-          'https://uptobox.com/api/link?token=$token&file_code=${'d3j5br62buy6'}');
+          'https://uptobox.com/api/link?token=$token&file_code=${widget.movie?.downloadID ?? ""}');
       downloadDataModel =
           DownloadDataModel.fromJson(jsonDecode(downloadURLRespose.data));
       setState(() {
@@ -58,14 +59,14 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
           const Duration(seconds: 30),
           () async {
             final newRes = await dio.get(
-                'https://uptobox.com/api/link?token=$token&file_code=${'d3j5br62buy6'}&waitingToken=${downloadDataModel!.data!.waitingToken}');
+                'https://uptobox.com/api/link?token=$token&file_code=${widget.movie?.downloadID ?? ""}&waitingToken=${downloadDataModel!.data!.waitingToken}');
             downloadDataModel =
                 DownloadDataModel.fromJson(jsonDecode(newRes.data));
           },
         );
       }
     } catch (e) {
-      //
+      errorMessage(message: e.toString());
     }
   }
 
@@ -98,6 +99,16 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     _cancelToken?.cancel();
   }
 
+  String findCategoryValue(String key) {
+    int index = categories.indexWhere((element) => element.key == key);
+    return categories[index].title;
+  }
+
+  String findLanguageValue(String key) {
+    int index = languages.indexWhere((element) => element.key == key);
+    return languages[index].data;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Hero(
@@ -120,51 +131,54 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                "assets/images/${widget.image}",
+              CachedNetworkImage(
+                placeholder: (context, url) => const SizedBox(
+                  height: 200,
+                  child: Progressor(),
+                ),
+                imageUrl: widget.movie?.thumbnailURl ?? "",
                 width: double.infinity,
                 fit: BoxFit.contain,
                 alignment: Alignment.topCenter,
               ),
-              const DetailCard(
+              DetailCard(
                 title: "Name of the movie",
-                value: 'Chello Chello',
+                value: widget.movie?.name ?? "",
               ),
-              const DetailCard(
+              DetailCard(
                 title: "Year of the movie",
-                value: '2018',
+                value: widget.movie?.year ?? "",
               ),
-              const DetailCard(
+              DetailCard(
                 title: "Language",
-                value: 'English',
+                value: findLanguageValue(widget.movie?.language ?? ""),
               ),
-              const DetailCard(
+              DetailCard(
                 title: "Category",
-                value: 'Horror',
+                value: findCategoryValue(widget.movie?.category ?? ""),
               ),
-              const DetailCard(
+              DetailCard(
                 title: "Director",
-                value: 'Mr.Rahul',
+                value: widget.movie?.director ?? "",
               ),
-              const DetailCard(
+              DetailCard(
                 title: "Actors",
-                value: 'Srinath, pallawi, gowind',
+                value: widget.movie?.actors ?? "",
               ),
-              const DetailCard(
+              DetailCard(
                 title: "About the movie",
-                value:
-                    'This movie is very romance movie that giving the truth of message for our life.',
+                value: widget.movie?.description ?? "",
               ),
               !isEnableDownloadLink
                   ? Center(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 60.0),
                         child: Text(
                           "Please wait for \n${_count}s to\ndownload or watch the movie",
                           style: TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: lf,
-                            color: blColor,
+                            color: blColor.withOpacity(0.6),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -172,6 +186,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     )
                   : CustomButton(
                       name: 'Watch',
+                      icon: Icons.movie,
                       onPressed: () async {
                         Navigator.push(
                           context,
@@ -184,82 +199,81 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ),
               isEnableDownloadLink
                   ? !isDownloading
-                      ? CustomButton(
-                          name: 'Download',
-                          onPressed: () async {
-                            try {
-                              Directory dir =
-                                  Directory('/storage/emulated/0/Download');
-                              var status = await Permission.storage.status;
-                              if (status.isDenied) {
-                                Permission.storage.request();
-                              }
-                              if (dir.path != "") {
-                                dio = Dio();
-                                _cancelToken = CancelToken();
-                                double progress = 0;
-                                String msg;
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 60,
+                          ),
+                          child: CustomButton(
+                            icon: Icons.download,
+                            name: 'Download',
+                            onPressed: () async {
+                              try {
+                                Directory dir =
+                                    Directory('/storage/emulated/0/Download');
+                                var status = await Permission.storage.status;
+                                if (status.isDenied) {
+                                  Permission.storage.request();
+                                }
+                                if (dir.path != "") {
+                                  dio = Dio();
+                                  _cancelToken = CancelToken();
+                                  progress = 0;
+                                  progressMsg = null;
 
-                                setState(() {
-                                  isDownloading = true;
-                                });
-
-                                await dio.download(
-                                  downloadDataModel!.data!.dlLink!,
-                                  '${dir.path}/${widget.movie?.name!.trim()}',
-                                  cancelToken: _cancelToken,
-                                  onReceiveProgress: (rcv, total) {
-                                    msg =
-                                        'received: ${formatBytes(rcv, 2)} out of total: ${formatBytes(total, 2)}';
-
-                                    setState(() {
-                                      progress = (rcv / total) * 100;
-                                      progressMsg =
-                                          "${progress.toStringAsFixed(0)}%\n$msg";
-                                    });
-
-                                    if (progress == 100) {
-                                      setState(() {
-                                        isDownloading = false;
-                                      });
-                                    } else if (progress < 100) {}
-                                  },
-                                  deleteOnError: true,
-                                ).then((_) {
                                   setState(() {
-                                    if (progress == 100) {
-                                      isDownloading = false;
-                                    }
+                                    isDownloading = true;
                                   });
-                                });
-                              } else {
-                                // ignore: use_build_context_synchronously
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text("Download folder was not found!"),
-                                  ),
-                                );
+
+                                  await dio.download(
+                                    downloadDataModel!.data!.dlLink!,
+                                    '${dir.path}/${widget.movie?.name!.trim()}',
+                                    cancelToken: _cancelToken,
+                                    onReceiveProgress: (rcv, total) {
+                                      setState(() {
+                                        progress = (rcv / total) * 100;
+                                        progressMsg =
+                                            'Downloading\n${progress.toStringAsFixed(2)}%\n${formatBytes(rcv, 2)} of ${formatBytes(total, 2)}';
+                                      });
+
+                                      if (progress == 100) {
+                                        setState(() {
+                                          isDownloading = false;
+                                        });
+                                      } else if (progress < 100) {}
+                                    },
+                                    deleteOnError: true,
+                                  ).then((_) {
+                                    setState(() {
+                                      if (progress == 100) {
+                                        isDownloading = false;
+                                        successMessage(
+                                            message:
+                                                "File downloaded successfully!");
+                                      }
+                                    });
+                                  });
+                                } else {
+                                  errorMessage(
+                                      message:
+                                          "Download folder was not found!");
+                                }
+                              } catch (e) {
+                                // errorMessage(message: e.toString());
                               }
-                            } catch (e) {
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(
-                              //     content: Text(e.toString()),
-                              //   ),
-                              // );
-                            }
-                          },
+                            },
+                          ),
                         )
                       : const SizedBox.shrink()
                   : const SizedBox.shrink(),
               isDownloading
                   ? Padding(
                       padding: const EdgeInsets.only(
-                        bottom: 20,
+                        bottom: 60,
                       ),
                       child: Column(
                         children: [
                           CustomButton(
+                            icon: Icons.cancel,
                             name: 'Cancle',
                             onPressed: () {
                               try {
@@ -278,29 +292,34 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                               decoration: TextDecoration.none,
                               fontSize: mf,
                               color: fcolorGrey,
+                              height: 2,
                             ),
                             textAlign: TextAlign.center,
                           ),
+                          Progressor(
+                            value: progress / 100,
+                            isCircular: false,
+                          )
                         ],
                       ),
                     )
                   : const SizedBox.shrink(),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 60,
-                ),
-                child: Center(
-                  child: Text(
-                    'Size of file\n 450MB',
-                    style: TextStyle(
-                      fontSize: mf,
-                      color: Colors.grey,
-                      decoration: TextDecoration.none,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(
+              //     bottom: 60,
+              //   ),
+              //   child: Center(
+              //     child: Text(
+              //       'Size of file\n 450MB',
+              //       style: TextStyle(
+              //         fontSize: mf,
+              //         color: Colors.grey,
+              //         decoration: TextDecoration.none,
+              //       ),
+              //       textAlign: TextAlign.center,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

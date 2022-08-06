@@ -7,12 +7,16 @@ class CustomButton extends StatelessWidget {
   final Function onPressed;
   final dynamic bgcolor;
   final dynamic fontcolor;
+  final IconData icon;
+  final Color? iconColor;
   const CustomButton(
       {Key? key,
       required this.name,
       required this.onPressed,
       this.bgcolor,
-      this.fontcolor})
+      this.fontcolor,
+      required this.icon,
+      this.iconColor})
       : super(key: key);
 
   @override
@@ -25,7 +29,12 @@ class CustomButton extends StatelessWidget {
       child: Center(
         child: SizedBox(
           width: size.width / 2,
-          child: OutlinedButton(
+          child: OutlinedButton.icon(
+            icon: Icon(
+              icon,
+              color: iconColor ?? btnColor,
+              size: 25,
+            ),
             onPressed: () => onPressed(),
             clipBehavior: Clip.antiAlias,
             style: OutlinedButton.styleFrom(
@@ -45,7 +54,7 @@ class CustomButton extends StatelessWidget {
                 // ),
               ),
             ),
-            child: Text(
+            label: Text(
               name,
               style: TextStyle(
                 fontWeight: FontWeight.bold,

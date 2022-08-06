@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:moo/controllers/category_controller.dart';
+import 'package:moo/controllers/language_controller.dart';
 import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/raw_data.dart';
+import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
 import 'package:moo/services/firebase.dart';
 import 'package:moo/widgets/widget.dart';
@@ -23,9 +27,20 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  static List<MovieModel> filterMovies(
+      List<MovieModel> _movies, String cat, String lan) {
+    if (cat != "al") {
+      _movies = _movies.where((element) => element.category == cat).toList();
+    }
+    if (lan != "al") {
+      _movies = _movies.where((element) => element.language == lan).toList();
+    }
+    return _movies;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -170,29 +185,53 @@ class _HomeScreenState extends State<HomeScreen> {
                   items: languages,
                   widgetType: WidgetType.textbutton,
                 ),
-                StreamBuilder(
-                  // stream: () {},
+                FutureBuilder<QuerySnapshot>(
+                  future: fireStore.collection('movies').get(),
                   builder: (context, snapshot) {
-                    return MasonryGridView.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 5,
-                      crossAxisSpacing: 5,
-                      shrinkWrap: true,
-                      itemCount: movies.length,
-                      padding: const EdgeInsets.all(10),
-                      physics: const NeverScrollableScrollPhysics(),
-                      addAutomaticKeepAlives: true,
-                      itemBuilder: (context, index) {
-                        return MovieCard(
-                          image: movies[index]["image"].toString(),
-                          title: movies[index]["title"].toString(),
-                          description:
-                              " is a best of movie that the movie of your best and best",
-                          index: index.toString(),
-                          movieModel: null,
-                        );
-                      },
-                    );
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Progressor();
+                    } else if (!snapshot.hasData) {
+                      return const Center(child: Text('Data not Found!'));
+                    }
+                    List<MovieModel>? snapData = [];
+                    for (var element in snapshot.data!.docs) {
+                      snapData.add(MovieModel.fromJson(element.data()));
+                    }
+
+                    // With Filter
+                    String cat =
+                        context.watch<Categorycontroller>().catSearchKey;
+                    String lan =
+                        context.watch<LanguageController>().lanSearchKey;
+
+                    snapData = filterMovies(snapData, cat, lan);
+
+                    return snapData.isEmpty
+                        ? Center(
+                            heightFactor: 25,
+                            child: Text(
+                              'Data not found!',
+                              style: TextStyle(
+                                fontSize: lf,
+                              ),
+                            ),
+                          )
+                        : MasonryGridView.count(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 5,
+                            shrinkWrap: true,
+                            itemCount: snapData.length,
+                            padding: const EdgeInsets.all(10),
+                            physics: const NeverScrollableScrollPhysics(),
+                            addAutomaticKeepAlives: true,
+                            itemBuilder: (context, index) {
+                              return MovieCard(
+                                index: index.toString(),
+                                movieModel: snapData![index],
+                              );
+                            },
+                          );
                   },
                 ),
                 // GridView.builder(

@@ -4,9 +4,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
+import 'package:moo/helper/help_functions.dart';
 import 'package:moo/helper/raw_data.dart';
 import 'package:moo/models/movie_model.dart';
 import 'package:moo/services/firebase.dart';
+import 'package:moo/services/message.dart';
 import 'package:moo/widgets/widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -38,6 +40,8 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   PlatformFile? _thumbnailFile;
   bool _isThumbnailFile = true;
 
+  bool _prcessing = false;
+
   // _uploadFileToGoogleDrive() async {
   //   try {
   //     // googleSignIn.onCurrentUserChanged
@@ -68,19 +72,16 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
     super.initState();
   }
 
-  // void selectMovieFile() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles();
-  //   if (result != null) _movieFile = result.files.single;
-  //   // Need to upload to google drive
-  //   setState(() {});
-  // }
-
   void selectThumbnail() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) _thumbnailFile = result.files.single;
-    setState(() {
-      _isThumbnailFile = true;
-    });
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) _thumbnailFile = result.files.single;
+      setState(() {
+        _isThumbnailFile = true;
+      });
+    } catch (e) {
+      errorMessage(message: e.toString());
+    }
   }
 
   void saveData() async {
@@ -90,20 +91,26 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
 
       fireStore.collection('movies').doc(docID).set({
         "id": docID,
-        "name": _nameEditController.value.toString(),
-        "description": _descriptionEditController.value.toString(),
+        "name": _nameEditController.text.toString(),
+        "description": _descriptionEditController.text.toString(),
         "thumbnailURl": thumbnailURL,
-        "year": _yearEditController.value.toString(),
+        "year": _yearEditController.text.toString(),
         "category": _category,
         "language": _language,
-        "director": _directorEditController.value.toString(),
-        "actors": _actorsEditController.value.toString(),
-        "downloadID": _fileDownloadIdController.value.toString(),
-      }).then((value) => {
-            //
-          });
+        "director": _directorEditController.text.toString(),
+        "actors": _actorsEditController.text.toString(),
+        "downloadID": _fileDownloadIdController.text.toString(),
+      }).then((value) {
+        setState(() {
+          _prcessing = false;
+        });
+        successMessage(message: 'Data added successfully!');
+      });
     } catch (e) {
-      print(e);
+      setState(() {
+        _prcessing = false;
+      });
+      errorMessage(message: e.toString());
     }
   }
 
@@ -118,20 +125,26 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
         thumbnailURL = await uploadfile(id: docID);
       }
       fireStore.collection('movies').doc(widget.movieModel?.id).update({
-        "name": _nameEditController.value.toString(),
-        "description": _descriptionEditController.value.toString(),
+        "name": _nameEditController.text.toString(),
+        "description": _descriptionEditController.text.toString(),
         "thumbnailURl": thumbnailURL,
-        "year": _yearEditController.value.toString(),
+        "year": _yearEditController.text.toString(),
         "category": _category,
         "language": _language,
-        "director": _directorEditController.value.toString(),
-        "actors": _actorsEditController.value.toString(),
-        "downloadID": _fileDownloadIdController.value.toString(),
-      }).then((value) => {
-            //
-          });
+        "director": _directorEditController.text.toString(),
+        "actors": _actorsEditController.text.toString(),
+        "downloadID": _fileDownloadIdController.text.toString(),
+      }).then((value) {
+        setState(() {
+          _prcessing = false;
+        });
+        successMessage(message: 'Data updated successfully!');
+      });
     } catch (e) {
-      print(e);
+      setState(() {
+        _prcessing = false;
+      });
+      errorMessage(message: e.toString());
     }
   }
 
@@ -144,11 +157,17 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
           .collection('movies')
           .doc(widget.movieModel?.id)
           .delete()
-          .then((value) => {
-                //
-              });
+          .then((value) {
+        setState(() {
+          _prcessing = false;
+        });
+        successMessage(message: 'Data deleted successfully!');
+      });
     } catch (e) {
-      print(e);
+      setState(() {
+        _prcessing = false;
+      });
+      errorMessage(message: e.toString());
     }
   }
 
@@ -161,6 +180,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
       var downloadURL = refStore.ref.getDownloadURL();
       return downloadURL;
     } catch (e) {
+      errorMessage(message: e.toString());
       return "";
     }
   }
@@ -169,7 +189,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
     try {
       await fireStorerage.refFromURL(url!).delete();
     } catch (e) {
-      //
+      errorMessage(message: e.toString());
     }
   }
 
@@ -187,25 +207,40 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () => {
-              // if (formKey.currentState!.validate() &&
-              // _thumbnailFile!.path != null)
-              widget.isUpdate ? updateData() : saveData()
-              // else if (_thumbnailFile?.path == null)
-              //   setState(() {
-              //     _isThumbnailFile = false;
-              //   })
-              // else
-              //   setState(() {
-              //     _isThumbnailFile = true;
-              //   })
-            },
-            icon: const Icon(
-              Icons.done_all,
-              size: 26,
-            ),
-          ),
+          _prcessing
+              ? const Progressor(
+                  height: 25,
+                  width: 25,
+                  padding: EdgeInsets.only(right: 10.0),
+                )
+              : IconButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate() &&
+                        _thumbnailFile!.path != null) {
+                      setState(() {
+                        _prcessing = true;
+                      });
+
+                      if (widget.isUpdate) {
+                        updateData();
+                      } else {
+                        saveData();
+                      }
+                    } else if (_thumbnailFile?.path == null) {
+                      setState(() {
+                        _isThumbnailFile = false;
+                      });
+                    } else {
+                      setState(() {
+                        _isThumbnailFile = true;
+                      });
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.done_all,
+                    size: 26,
+                  ),
+                ),
         ],
       ),
       body: SingleChildScrollView(
@@ -214,6 +249,9 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
         child: Form(
           // autovalidateMode: AutovalidateMode.always,
           key: formKey,
+          onWillPop: () async {
+            return _prcessing ? false : true;
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -227,7 +265,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter name of the Movie';
                     }
-                    return '';
+                    return null;
                   }),
               InputField(
                   textEditingController: _fileDownloadIdController,
@@ -236,7 +274,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter Download ID';
                     }
-                    return '';
+                    return null;
                   }),
               InputField(
                 textEditingController: _descriptionEditController,
@@ -245,7 +283,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter Description';
                   }
-                  return '';
+                  return null;
                 },
                 maxLines: 5,
               ),
@@ -256,7 +294,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter year of the Movie';
                     }
-                    return '';
+                    return null;
                   }),
               SelectField(
                   hintText: "Select a Category",
@@ -278,7 +316,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please select a Category';
                     }
-                    return '';
+                    return null;
                   }),
               SelectField(
                   hintText: "Select a Language",
@@ -300,7 +338,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please select a Language';
                     }
-                    return '';
+                    return null;
                   }),
               InputField(
                   textEditingController: _directorEditController,
@@ -309,7 +347,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter director of the Movie';
                     }
-                    return '';
+                    return null;
                   }),
               InputField(
                   textEditingController: _actorsEditController,
@@ -319,7 +357,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter actors of the Movie';
                     }
-                    return '';
+                    return null;
                   }),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
@@ -382,13 +420,32 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
               const SizedBox(
                 height: 30,
               ),
-              widget.isUpdate
-                  ? CustomButton(
-                      name: 'Delete',
-                      onPressed: () {},
-                      bgcolor: Colors.red,
-                      fontcolor: Colors.white,
+              _prcessing
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: Text(
+                        'Data Processing...',
+                        style: TextStyle(
+                          fontSize: mf,
+                          color: mainColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     )
+                  : const SizedBox.shrink(),
+              widget.isUpdate
+                  ? _prcessing
+                      ? const SizedBox.shrink()
+                      : CustomButton(
+                          icon: Icons.delete,
+                          iconColor: Colors.white,
+                          name: 'Delete',
+                          onPressed: () {
+                            deleteData();
+                          },
+                          bgcolor: Colors.red,
+                          fontcolor: Colors.white,
+                        )
                   : const SizedBox.shrink(),
             ],
           ),

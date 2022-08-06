@@ -4,7 +4,7 @@ class SelectField extends StatelessWidget {
   final List<DropdownMenuItem<String>> dataList;
   final String hintText;
   final Function(String?) onChanged;
-  final String Function(String?) validatorFunction;
+  final String? Function(String?) validatorFunction;
   const SelectField(
       {Key? key,
       required this.dataList,

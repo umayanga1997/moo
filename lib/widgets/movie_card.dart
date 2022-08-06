@@ -4,18 +4,14 @@ import 'package:moo/helper/fonts.dart';
 import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
 import 'package:moo/screens/mobile/movie_details.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:moo/widgets/progressor.dart';
 
 class MovieCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String description;
   final String index;
   final MovieModel? movieModel;
   const MovieCard({
     Key? key,
-    required this.image,
-    required this.title,
-    required this.description,
     required this.index,
     required this.movieModel,
   }) : super(key: key);
@@ -28,7 +24,6 @@ class MovieCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => MovieDetailsScreen(
-              image: image,
               index: index,
               movie: movieModel,
             ),
@@ -53,8 +48,16 @@ class MovieCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    "assets/images/$image",
+                  CachedNetworkImage(
+                    placeholder: (context, url) => const SizedBox(
+                      height: 50,
+                      child: Progressor(
+                        width: 20,
+                        height: 20,
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    imageUrl: movieModel?.thumbnailURl ?? "",
                     width: double.infinity,
                     fit: BoxFit.fitWidth,
                     alignment: Alignment.topCenter,
@@ -65,7 +68,7 @@ class MovieCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          movieModel?.name ?? "",
                           style: TextStyle(
                             color: blColor,
                             fontSize: lf,
@@ -79,7 +82,7 @@ class MovieCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
-                            description,
+                            movieModel?.description ?? "",
                             style: TextStyle(
                               color: fcolorGrey,
                               fontSize: mf,

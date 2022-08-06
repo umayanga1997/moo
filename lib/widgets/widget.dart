@@ -8,3 +8,4 @@ export 'custom_button.dart';
 export 'input_field.dart';
 export 'file_card.dart';
 export 'select_field.dart';
+export 'progressor.dart';
