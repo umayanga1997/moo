@@ -8,6 +8,7 @@ import 'package:moo/controllers/search_controller.dart';
 import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
+import 'package:moo/helper/help_functions.dart';
 import 'package:moo/helper/raw_data.dart';
 import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
@@ -82,7 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
               collapsedHeight: 60,
               expandedHeight: 120,
               title: Image.asset(
-                'assets/logos/Logo.png',
+                isDark(context)
+                    ? 'assets/logos/Logo_white.png'
+                    : 'assets/logos/Logo.png',
                 height: 60,
                 width: 60,
                 fit: BoxFit.contain,
@@ -232,11 +235,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   items: languages,
                   widgetType: WidgetType.textbutton,
                 ),
+
                 StreamBuilder<QuerySnapshot>(
                   stream: fireStore.collection('movies').snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Progressor();
+                      return const Progressor(
+                        isCircular: false,
+                        strokeWidth: 2,
+                      );
                     } else if (!snapshot.hasData) {
                       return const Center(child: Text('Data not Found!'));
                     }

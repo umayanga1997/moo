@@ -77,13 +77,19 @@ flutter_icons:
   image_path: "assets/ic_launcher.png"
 
 flutter_native_splash:
-  color: "#ffffff"
-  image_dark: "assets/ic_launcher.png"
-  color_dark: "#121212"
-  image: "assets/ic_launcher.png"
+  color: "#F05B22"
+  image: "assets/ic_launcher_white.png"
+  image_dark: "assets/ic_launcher_white.png"
+  color_dark: "#F05B22"
   # branding: assets/branding-production.png
   # branding_dark: assets/branding-production.png
+  # android_12:
+  #   image: "assets/ic_launcher_white.png"
+  #   icon_background_color: "#F05B22"
+  #   image_dark: "assets/ic_launcher_white.png"
+  #   icon_background_color_dark: "#F05B22"
   web: false
+  # flutter pub run flutter_native_splash:create
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

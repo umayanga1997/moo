@@ -1,5 +1,8 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
+import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/raw_data.dart';
+import 'package:provider/provider.dart';
 
 String formatBytes(int bytes, int decimals) {
   if (bytes <= 0) return "0 B";
@@ -16,4 +19,8 @@ String findCategoryValue(String key) {
 String findLanguageValue(String key) {
   int index = languages.indexWhere((element) => element.key == key);
   return languages[index].data;
+}
+
+bool isDark(BuildContext context) {
+  return context.read<ThemeController>().isDark;
 }

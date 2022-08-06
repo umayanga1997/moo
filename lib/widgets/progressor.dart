@@ -42,7 +42,7 @@ class Progressor extends StatelessWidget {
                 // color: btnColor,
                 value: value,
                 valueColor: AlwaysStoppedAnimation<Color>(mainColor),
-                minHeight: 5,
+                minHeight: strokeWidth ?? 5,
               ),
             ),
     );
