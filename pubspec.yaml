@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -30,7 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -43,7 +42,7 @@ dependencies:
   firebase_storage: ^10.3.4
   firebase_core: ^1.20.0
   google_sign_in: ^5.4.0
-  firebase_auth: ^3.6.2 
+  firebase_auth: ^3.6.2
   # googleapis: ^9.1.0
   # googleapis_auth: ^1.3.1
   video_player: ^2.4.5
@@ -55,6 +54,7 @@ dependencies:
   uuid: ^3.0.6
   fluttertoast: ^8.0.9
   cached_network_image: ^3.2.1
+  flutter_native_splash: ^2.2.7
   # path_provider: ^2.0.11
 
 dev_dependencies:
@@ -68,13 +68,28 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   change_app_package_name: ^1.1.0
+  flutter_launcher_icons: ^0.9.3
+  rename: ^2.0.1
+
+flutter_icons:
+  android: "launcher_icon"
+  # ios: true
+  image_path: "assets/ic_launcher.png"
+
+flutter_native_splash:
+  color: "#ffffff"
+  image_dark: "assets/ic_launcher.png"
+  color_dark: "#121212"
+  image: "assets/ic_launcher.png"
+  # branding: assets/branding-production.png
+  # branding_dark: assets/branding-production.png
+  web: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
