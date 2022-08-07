@@ -43,6 +43,11 @@ class ThemeType {
           ),
         ),
       ),
+      listTileTheme: ListTileThemeData(
+        textColor: greenColor,
+        dense: true,
+        iconColor: greenColor,
+      ),
       cardTheme: CardTheme(
         elevation: 1,
         clipBehavior: Clip.antiAlias,
@@ -143,6 +148,11 @@ class ThemeType {
           color: greyColor1,
         ),
         subtitle1: TextStyle(
+          fontSize: mf,
+          decoration: TextDecoration.none,
+          color: greyColor1,
+        ),
+        subtitle2: TextStyle(
           fontSize: sf,
           decoration: TextDecoration.none,
           color: greyColor1,
@@ -190,6 +200,11 @@ class ThemeType {
             bottomRight: Radius.circular(10),
           ),
         ),
+      ),
+      listTileTheme: ListTileThemeData(
+        textColor: whiteColor,
+        dense: true,
+        iconColor: whiteColor,
       ),
       cardTheme: CardTheme(
         elevation: 1,
@@ -291,6 +306,11 @@ class ThemeType {
           color: greyColor2,
         ),
         subtitle1: TextStyle(
+          fontSize: mf,
+          decoration: TextDecoration.none,
+          color: greyColor3,
+        ),
+        subtitle2: TextStyle(
           fontSize: sf,
           decoration: TextDecoration.none,
           color: greyColor3,

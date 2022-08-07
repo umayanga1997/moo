@@ -400,7 +400,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                       Text(
                         'Select File',
                         style: TextStyle(
-                          color: isDark(context) ? greyColor3 : greyColor2,
+                          color: isDark(context) ? greyColor3 : greyColor1,
                           fontSize: mf,
                         ),
                       ),

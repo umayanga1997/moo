@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,6 +13,7 @@ import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/help_functions.dart';
 import 'package:moo/helper/raw_data.dart';
 import 'package:moo/models/movie_model.dart';
+import 'package:moo/screens/mobile/about.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
 import 'package:moo/services/firebase.dart';
 import 'package:moo/widgets/widget.dart';
@@ -24,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final TextEditingController _serachController = TextEditingController();
 
   @override
@@ -69,14 +73,102 @@ class _HomeScreenState extends State<HomeScreen> {
     return movies;
   }
 
+  void drawer() {
+    _scaffoldKey.currentState!.openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            SizedBox(
+              height: 100,
+              width: double.infinity,
+              child: DrawerHeader(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: auth.currentUser?.providerData[0].photoURL == ""
+                          ? Icon(
+                              Icons.account_circle,
+                              size: 45,
+                              color: greyColor2,
+                            )
+                          : CircleAvatar(
+                              radius: 100,
+                              backgroundImage: CachedNetworkImageProvider(
+                                auth.currentUser?.providerData[0].photoURL ??
+                                    "",
+                                scale: 1,
+                              ),
+                            ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        child: Text(
+                          'Welcome\n${auth.currentUser?.displayName}',
+                          style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        await auth.signOut();
+                        await googleSignIn.signOut();
+                      },
+                      icon: const Icon(
+                        Icons.logout,
+                      ),
+                      splashRadius: 28,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text('Add New'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MovieAddScreen(
+                      movieModel: null,
+                    ),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('About Us'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AboutScreen(),
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+      ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
+              automaticallyImplyLeading: false,
               centerTitle: true,
               floating: false,
               pinned: true,
@@ -106,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         IconButton(
-                          onPressed: () => {},
+                          onPressed: () => drawer(),
                           icon: const FaIcon(
                             FontAwesomeIcons.barsStaggered,
                           ),
@@ -170,32 +262,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             context.watch<ThemeController>().isDark
                                 ? Icons.light_mode
                                 : Icons.dark_mode,
-                          ),
-                          splashRadius: 28,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MovieAddScreen(
-                                  movieModel: null,
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.add,
-                          ),
-                          splashRadius: 28,
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            await auth.signOut();
-                            await googleSignIn.signOut();
-                          },
-                          icon: const Icon(
-                            Icons.logout,
                           ),
                           splashRadius: 28,
                         ),
