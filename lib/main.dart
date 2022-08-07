@@ -1,12 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moo/controllers/category_controller.dart';
 import 'package:moo/controllers/language_controller.dart';
 import 'package:moo/controllers/search_controller.dart';
 import 'package:moo/controllers/theme_controller.dart';
-import 'package:moo/helper/colors.dart';
+import 'package:moo/helper/theme.dart';
 import 'package:moo/layouts/layout.dart';
 import 'package:provider/provider.dart';
 
@@ -41,36 +40,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Moo',
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.white,
-          elevation: 2,
-          iconTheme: IconThemeData(
-            color: btnColor,
-          ),
-          actionsIconTheme: IconThemeData(
-            color: btnColor,
-          ),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.white,
-            statusBarBrightness: Brightness.light,
-            statusBarIconBrightness: Brightness.dark,
-            // systemNavigationBarColor: Colors.white,
-            // systemNavigationBarIconBrightness: Brightness.dark,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Color.fromARGB(255, 58, 58, 58),
-            statusBarIconBrightness: Brightness.light,
-          ),
-        ),
-      ),
+      theme: ThemeType().lightMode(),
+      darkTheme: ThemeType().darkMode(),
       themeMode: context.watch<ThemeController>().isDark
           ? ThemeMode.dark
           : ThemeMode.light,

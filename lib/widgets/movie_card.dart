@@ -30,18 +30,13 @@ class MovieCard extends StatelessWidget {
           ),
         );
       },
-      splashColor: btnColorOpacity,
-      focusColor: btnColorOpacity,
-      highlightColor: btnColorOpacity,
+      splashColor: greenColorOpacity,
+      focusColor: greenColorOpacity,
+      highlightColor: greenColorOpacity,
       borderRadius: BorderRadius.circular(8),
       child: Hero(
         tag: index,
         child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: 1,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -70,8 +65,9 @@ class MovieCard extends StatelessWidget {
                         Text(
                           movieModel?.name ?? "",
                           style: TextStyle(
-                            color: blColor,
-                            fontSize: lf,
+                            color: Theme.of(context).textTheme.bodyText1?.color,
+                            fontSize:
+                                Theme.of(context).textTheme.bodyText1?.fontSize,
                             letterSpacing: 0.4,
                             fontWeight: FontWeight.w500,
                           ),
@@ -84,8 +80,12 @@ class MovieCard extends StatelessWidget {
                           child: Text(
                             movieModel?.description ?? "",
                             style: TextStyle(
-                              color: fcolorGrey,
-                              fontSize: mf,
+                              color:
+                                  Theme.of(context).textTheme.bodyText2?.color,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  ?.fontSize,
                               // letterSpacing: 0.4,
                             ),
                             textAlign: TextAlign.justify,
@@ -102,16 +102,16 @@ class MovieCard extends StatelessWidget {
                 top: 10,
                 right: 10,
                 child: Container(
-                  padding: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(0),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).backgroundColor,
                       borderRadius: BorderRadius.circular(100),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 5,
                           blurStyle: BlurStyle.solid,
-                          color: fcolorGrey,
+                          color: greyColor1,
                           // spreadRadius: 1,
                         )
                       ]),
@@ -127,9 +127,8 @@ class MovieCard extends StatelessWidget {
                         ),
                       );
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.history,
-                      color: btnColor,
                     ),
                     splashRadius: 15,
                   ),

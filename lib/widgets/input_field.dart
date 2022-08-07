@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
+import 'package:moo/helper/fonts.dart';
 
 class InputField extends StatelessWidget {
   final TextEditingController textEditingController;
   final String hintText;
   final int maxLines;
   final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? paddingContent;
   final BorderSide? borderSide;
   final Function(String)? onChanged;
+  final bool? isDense;
   final String? Function(String?)? validatorFunction;
   const InputField(
       {Key? key,
@@ -16,8 +19,10 @@ class InputField extends StatelessWidget {
       this.maxLines = 1,
       this.validatorFunction,
       this.padding,
+      this.isDense,
       this.borderSide,
-      this.onChanged})
+      this.onChanged,
+      this.paddingContent})
       : super(key: key);
 
   @override
@@ -32,24 +37,13 @@ class InputField extends StatelessWidget {
         onChanged: onChanged ?? (_) {},
         controller: textEditingController,
         maxLines: maxLines,
+        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+              fontSize: mf,
+            ),
         decoration: InputDecoration(
           hintText: hintText,
-          // isDense: true,
-          isCollapsed: true,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: borderSide ??
-                BorderSide(
-                  style: BorderStyle.solid,
-                  width: 0.5,
-                  color: fcolorGrey.withOpacity(0.7),
-                ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          isDense: isDense,
+          contentPadding: paddingContent,
         ),
       ),
     );

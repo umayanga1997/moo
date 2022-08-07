@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moo/helper/colors.dart';
-import 'package:moo/helper/fonts.dart';
 import 'package:moo/widgets/widget.dart';
 
 enum WidgetType { circle, textbutton }
@@ -30,9 +28,9 @@ class ListData extends StatelessWidget {
             child: Text(
               listTitle,
               style: TextStyle(
-                fontSize: xf,
+                fontSize: Theme.of(context).textTheme.headline2!.fontSize,
                 fontWeight: FontWeight.w500,
-                color: mainColor,
+                color: Theme.of(context).textTheme.headline2!.color,
               ),
             ),
           ),

@@ -32,19 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   static List<MovieModel> filterMovies(
-      List<MovieModel> _movies, String cat, String lan) {
+      List<MovieModel> movies, String cat, String lan) {
     if (cat != "al") {
-      _movies = _movies.where((element) => element.category == cat).toList();
+      movies = movies.where((element) => element.category == cat).toList();
     }
     if (lan != "al") {
-      _movies = _movies.where((element) => element.language == lan).toList();
+      movies = movies.where((element) => element.language == lan).toList();
     }
-    return _movies;
+    return movies;
   }
 
   static List<MovieModel> filterMoviesWithValue(
-      List<MovieModel> _movies, String value) {
-    _movies = _movies
+      List<MovieModel> movies, String value) {
+    movies = movies
         .where(
           (element) =>
               element.year!
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         )
         .toList();
 
-    return _movies;
+    return movies;
   }
 
   @override
@@ -107,9 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         IconButton(
                           onPressed: () => {},
-                          icon: FaIcon(
+                          icon: const FaIcon(
                             FontAwesomeIcons.barsStaggered,
-                            color: btnColor,
                           ),
                           splashRadius: 28,
                         ),
@@ -119,8 +118,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             textEditingController: _serachController,
                             padding: const EdgeInsets.all(0),
                             hintText: "Search...",
+                            isDense: true,
+                            paddingContent: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
                             borderSide: BorderSide(
-                              color: btnColor,
+                              color: isDark(context) ? whiteColor : greenColor,
                               style: BorderStyle.solid,
                               width: 0.7,
                             ),
@@ -168,8 +170,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             context.watch<ThemeController>().isDark
                                 ? Icons.light_mode
                                 : Icons.dark_mode,
-                            color: btnColor,
-                            size: 27,
                           ),
                           splashRadius: 28,
                         ),
@@ -184,10 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.add,
-                            color: btnColor,
-                            size: 27,
                           ),
                           splashRadius: 28,
                         ),
@@ -196,10 +194,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             await auth.signOut();
                             await googleSignIn.signOut();
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.logout,
-                            color: btnColor,
-                            size: 27,
                           ),
                           splashRadius: 28,
                         ),

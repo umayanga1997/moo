@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/help_functions.dart';
-import 'package:moo/helper/raw_data.dart';
 import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/player_screen.dart';
 import 'package:moo/services/message.dart';
@@ -113,7 +112,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       //   );
       // },
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).backgroundColor,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(top: 40),
@@ -168,7 +167,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                           style: TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: lf,
-                            color: blColor.withOpacity(0.6),
+                            color: greyColor2,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -281,7 +280,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: mf,
-                              color: fcolorGrey,
+                              color: greyColor2,
                               height: 2,
                             ),
                             textAlign: TextAlign.center,

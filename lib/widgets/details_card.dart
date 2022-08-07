@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
+import 'package:moo/helper/help_functions.dart';
 
 class DetailCard extends StatelessWidget {
   final String title;
@@ -18,11 +19,7 @@ class DetailCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: mf,
-              color: fcolorGrey,
-              decoration: TextDecoration.none,
-            ),
+            style: Theme.of(context).textTheme.bodyText2,
           ),
           const SizedBox(
             height: 5,
@@ -31,8 +28,10 @@ class DetailCard extends StatelessWidget {
             value,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: lf,
-              color: mainColor,
+              fontSize: Theme.of(context).textTheme.headline1?.fontSize,
+              color: isDark(context)
+                  ? Theme.of(context).textTheme.headline3?.color
+                  : Theme.of(context).textTheme.headline1?.color,
               decoration: TextDecoration.none,
             ),
             textAlign: TextAlign.justify,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
+import 'package:moo/helper/fonts.dart';
 
 class SelectField extends StatelessWidget {
   final List<DropdownMenuItem<String>> dataList;
@@ -25,20 +26,12 @@ class SelectField extends StatelessWidget {
         value: currentItem,
         items: dataList,
         onChanged: onChanged,
+        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+              fontSize: mf,
+            ),
         decoration: InputDecoration(
           hintText: hintText,
           isDense: true,
-          isCollapsed: true,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              style: BorderStyle.solid,
-              width: 0.5,
-              color: fcolorGrey.withOpacity(0.7),
-            ),
-          ),
         ),
       ),
     );

@@ -12,8 +12,6 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
@@ -35,8 +33,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
     // Once signed in, return the UserCredential
     await auth.signInWithCredential(credential);
-
-    print(auth.currentUser);
   }
 
   @override
@@ -49,7 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
           // ignore: deprecated_member_use
           child: InkWell(
             onTap: () => signInWithGoogle(),
-            highlightColor: btnColor.withOpacity(0.1),
+            highlightColor: greenColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
             child: Container(
               padding: const EdgeInsets.symmetric(
@@ -59,7 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: btnColor,
+                    color: greenColor,
                     width: 0.7,
                   )),
               child: Image.asset(

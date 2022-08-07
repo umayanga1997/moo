@@ -33,7 +33,7 @@ class FileCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: btnColor,
+                color: isDark(context) ? whiteColor : greenColor,
                 width: 0.8,
                 style: BorderStyle.solid,
               ),
@@ -44,7 +44,7 @@ class FileCard extends StatelessWidget {
                   child: Text(
                     name,
                     style: TextStyle(
-                      color: btnColor,
+                      color: isDark(context) ? whiteColor : greenColor,
                       fontSize: mf,
                     ),
                   ),
@@ -67,7 +67,7 @@ class FileCard extends StatelessWidget {
                       : Text(
                           'File\nSelected\n${formatBytes(file!.size, 2)}',
                           style: TextStyle(
-                            color: btnColor,
+                            color: greenColor,
                             fontSize: mf,
                           ),
                           textAlign: TextAlign.center,
@@ -89,7 +89,7 @@ class FileCard extends StatelessWidget {
                       : Text(
                           'File\nAvailable',
                           style: TextStyle(
-                            color: btnColor,
+                            color: greenColor,
                             fontSize: mf,
                           ),
                           textAlign: TextAlign.center,

@@ -24,9 +24,9 @@ class ChipDataButton extends StatelessWidget {
                 ? 1
                 : 0,
             child: ClipWidget(
-              bgbrcolor: btnColor,
-              color: Colors.white,
               title: title,
+              bgColor: greenColor,
+              isBorder: false,
             ),
           ),
           context.watch<LanguageController>().lanSearchKey == dataKey
@@ -34,10 +34,20 @@ class ChipDataButton extends StatelessWidget {
               : GestureDetector(
                   onTap: () {
                     context.read<LanguageController>().changeSearchKey(dataKey);
+                    // Theme.of(context).chipTheme.copyWith(
+                    //       backgroundColor: whiteColor,
+                    //       brightness: Brightness.light,
+                    //       labelStyle: TextStyle(
+                    //         color: greenColor,
+                    //       ),
+                    //       shape: RoundedRectangleBorder(
+                    //         side: BorderSide(
+                    //           color: greenColor,
+                    //         ),
+                    //       ),
+                    //     );
                   },
                   child: ClipWidget(
-                    bgbrcolor: btnColor,
-                    color: Colors.white,
                     title: title,
                     isBorder: true,
                   ),

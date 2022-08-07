@@ -65,9 +65,10 @@ class _CircleDataCardState extends State<CircleDataCard> {
                         child: Text(
                           widget.title,
                           style: TextStyle(
-                            fontSize: mf,
+                            fontSize:
+                                Theme.of(context).textTheme.headline4?.fontSize,
                             letterSpacing: 0.6,
-                            color: btnColor,
+                            color: Theme.of(context).textTheme.headline4?.color,
                             fontWeight: FontWeight.w500,
                           ),
                           maxLines: 2,
@@ -103,7 +104,7 @@ class _CircleDataCardState extends State<CircleDataCard> {
                     : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
-                  color: btnColor,
+                  color: greenColor,
                 ),
                 child: Text(
                   widget.title,

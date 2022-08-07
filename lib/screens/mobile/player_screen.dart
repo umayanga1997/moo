@@ -77,7 +77,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       child: _videoPlayerController != null &&
               _videoPlayerController!.value.isInitialized
           ? Container(
-              color: Colors.white,
+              color: Theme.of(context).backgroundColor,
               child: OrientationBuilder(builder: (context, orientation) {
                 final isPortrait = orientation == Orientation.portrait;
                 return GestureDetector(
@@ -129,7 +129,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                   right: 10,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: fcolorGrey,
+                                      color: greyColor1,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     width: double.infinity,
@@ -228,7 +228,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               }),
             )
           : Container(
-              color: Colors.white,
+              color: Theme.of(context).backgroundColor,
               child: const Center(
                 child: SizedBox(
                   height: 30,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
+import 'package:moo/helper/help_functions.dart';
 
 class CustomButton extends StatelessWidget {
   final String name;
@@ -32,8 +33,7 @@ class CustomButton extends StatelessWidget {
           child: OutlinedButton.icon(
             icon: Icon(
               icon,
-              color: iconColor ?? btnColor,
-              size: 25,
+              color: iconColor ?? Theme.of(context).iconTheme.color,
             ),
             onPressed: () => onPressed(),
             clipBehavior: Clip.antiAlias,
@@ -42,24 +42,25 @@ class CustomButton extends StatelessWidget {
                 vertical: 10,
                 horizontal: 25,
               ),
-              backgroundColor: bgcolor ?? Colors.white,
+              backgroundColor: bgcolor ?? Theme.of(context).backgroundColor,
               alignment: Alignment.center,
-              elevation: 2,
+              elevation: 1,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-                // side: BorderSide(
-                //   color: btnColor,
-                //   width: 2,
-                //   style: BorderStyle.solid,
-                // ),
+                side: BorderSide(
+                  color: isDark(context) ? whiteColor : greenColor,
+                  // width: 1,
+                  style: BorderStyle.solid,
+                ),
               ),
             ),
             label: Text(
               name,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: fontcolor ?? btnColor,
-                fontSize: mf,
+                color:
+                    fontcolor ?? Theme.of(context).textTheme.headline4?.color,
+                fontSize: Theme.of(context).textTheme.headline4?.fontSize,
               ),
             ),
           ),

@@ -223,10 +223,9 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Add a new movie',
           style: TextStyle(
-            color: mainColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -281,7 +280,7 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               InputField(
                   textEditingController: _nameEditController,
@@ -397,9 +396,9 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Files',
+                      'Select File',
                       style: TextStyle(
-                        color: fcolorGrey,
+                        color: isDark(context) ? greyColor3 : greyColor2,
                         fontSize: mf,
                       ),
                     ),
