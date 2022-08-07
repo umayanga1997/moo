@@ -5,16 +5,17 @@ import 'package:moo/controllers/category_controller.dart';
 import 'package:moo/controllers/language_controller.dart';
 import 'package:moo/controllers/search_controller.dart';
 import 'package:moo/controllers/theme_controller.dart';
+import 'package:moo/helper/help_functions.dart';
 import 'package:moo/helper/theme.dart';
 import 'package:moo/layouts/layout.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // Splash Screen Remove
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // removeSplash();
+  // Storage Permissions
+  permissions();
   // Check current theme mode of the mobile
   var brightness = SchedulerBinding.instance.window.platformBrightness;
   bool isDarkMode = brightness == Brightness.dark;

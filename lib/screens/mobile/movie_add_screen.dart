@@ -221,273 +221,276 @@ class _MovieAddScreenState extends State<MovieAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Add a new movie',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async {
+        return _prcessing ? false : true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Add a new movie',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        actions: [
-          _prcessing
-              ? const Progressor(
-                  height: 25,
-                  width: 25,
-                  padding: EdgeInsets.only(right: 10.0),
-                )
-              : IconButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate() &&
-                        (_thumbnailFile?.path! != null ||
-                            widget.movieModel?.thumbnailURl != null)) {
-                      setState(() {
-                        _prcessing = true;
-                      });
+          actions: [
+            _prcessing
+                ? const Progressor(
+                    height: 25,
+                    width: 25,
+                    padding: EdgeInsets.only(right: 10.0),
+                  )
+                : IconButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate() &&
+                          (_thumbnailFile?.path! != null ||
+                              widget.movieModel?.thumbnailURl != null)) {
+                        setState(() {
+                          _prcessing = true;
+                        });
 
-                      if (widget.isUpdate) {
-                        updateData();
+                        if (widget.isUpdate) {
+                          updateData();
+                        } else {
+                          saveData();
+                        }
+                      } else if (_thumbnailFile?.path == null) {
+                        setState(() {
+                          _isThumbnailFile = false;
+                        });
                       } else {
-                        saveData();
+                        setState(() {
+                          _isThumbnailFile = true;
+                        });
                       }
-                    } else if (_thumbnailFile?.path == null) {
-                      setState(() {
-                        _isThumbnailFile = false;
-                      });
-                    } else {
-                      setState(() {
-                        _isThumbnailFile = true;
-                      });
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.done_all,
-                    size: 26,
-                  ),
-                ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(10),
-        child: Form(
-          // autovalidateMode: AutovalidateMode.always,
-          key: formKey,
-          onWillPop: () async {
-            return _prcessing ? false : true;
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 5,
-              ),
-              InputField(
-                  textEditingController: _nameEditController,
-                  hintText: "Name of the Movie",
-                  validatorFunction: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter name of the Movie';
-                    }
-                    return null;
-                  }),
-              InputField(
-                  textEditingController: _fileDownloadIdController,
-                  hintText: "Download ID",
-                  validatorFunction: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Download ID';
-                    }
-                    return null;
-                  }),
-              InputField(
-                textEditingController: _descriptionEditController,
-                hintText: "Description",
-                validatorFunction: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter Description';
-                  }
-                  return null;
-                },
-                maxLines: 5,
-              ),
-              InputField(
-                  textEditingController: _yearEditController,
-                  hintText: "Year",
-                  validatorFunction: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter year of the Movie';
-                    }
-                    return null;
-                  }),
-              SelectField(
-                  currentItem: widget.isUpdate
-                      ? "$_category - ${findCategoryValue(_category)}"
-                      : null,
-                  hintText: "Select a Category",
-                  dataList: <String>[
-                    ...categories.map(
-                      (e) => e.key + ' - ' + e.title,
-                    )
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    var data = value.toString().substring(0, 2);
-                    _category = data;
-                  },
-                  validatorFunction: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a Category';
-                    }
-                    return null;
-                  }),
-              SelectField(
-                  currentItem: widget.isUpdate
-                      ? '$_language - ${findLanguageValue(_language)}'
-                      : null,
-                  hintText: "Select a Language",
-                  dataList: <String>[
-                    ...languages.map(
-                      (e) => e.key + ' - ' + e.data,
-                    )
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    var data = value.toString().substring(0, 2);
-                    _language = data;
-                  },
-                  validatorFunction: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a Language';
-                    }
-                    return null;
-                  }),
-              InputField(
-                  textEditingController: _directorEditController,
-                  hintText: "Director",
-                  validatorFunction: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter director of the Movie';
-                    }
-                    return null;
-                  }),
-              InputField(
-                  textEditingController: _actorsEditController,
-                  hintText: "Actors",
-                  maxLines: 5,
-                  validatorFunction: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter actors of the Movie';
-                    }
-                    return null;
-                  }),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Select File',
-                      style: TextStyle(
-                        color: isDark(context) ? greyColor3 : greyColor2,
-                        fontSize: mf,
-                      ),
+                    },
+                    icon: const Icon(
+                      Icons.done_all,
+                      size: 26,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 100,
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Flexible(
-                              child: FileCard(
-                                onSelect: selectThumbnail,
-                                name: 'Thumbnail',
-                                file: _thumbnailFile,
-                                fileUrl: widget.movieModel?.thumbnailURl,
-                                isImg: true,
-                              ),
-                            ),
-                            // Flexible(
-                            //   child: FileCard(
-                            //     onSelect: selectMovieFile,
-                            //     name: 'Movie File',
-                            //     file: _movieFile,
-                            //     fileUrl: widget.movieModel?.downloadID,
-                            //     isImg: false,
-                            //   ),
-                            // ),
-                          ],
+                  ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(10),
+          child: Form(
+            // autovalidateMode: AutovalidateMode.always,
+            key: formKey,
+
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                InputField(
+                    textEditingController: _nameEditController,
+                    hintText: "Name of the Movie",
+                    validatorFunction: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter name of the Movie';
+                      }
+                      return null;
+                    }),
+                InputField(
+                    textEditingController: _fileDownloadIdController,
+                    hintText: "Download ID",
+                    validatorFunction: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Download ID';
+                      }
+                      return null;
+                    }),
+                InputField(
+                  textEditingController: _descriptionEditController,
+                  hintText: "Description",
+                  validatorFunction: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Description';
+                    }
+                    return null;
+                  },
+                  maxLines: 5,
+                ),
+                InputField(
+                    textEditingController: _yearEditController,
+                    hintText: "Year",
+                    validatorFunction: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter year of the Movie';
+                      }
+                      return null;
+                    }),
+                SelectField(
+                    currentItem: widget.isUpdate
+                        ? "$_category - ${findCategoryValue(_category)}"
+                        : null,
+                    hintText: "Select a Category",
+                    dataList: <String>[
+                      ...categories.map(
+                        (e) => e.key + ' - ' + e.title,
+                      )
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      var data = value.toString().substring(0, 2);
+                      _category = data;
+                    },
+                    validatorFunction: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a Category';
+                      }
+                      return null;
+                    }),
+                SelectField(
+                    currentItem: widget.isUpdate
+                        ? '$_language - ${findLanguageValue(_language)}'
+                        : null,
+                    hintText: "Select a Language",
+                    dataList: <String>[
+                      ...languages.map(
+                        (e) => e.key + ' - ' + e.data,
+                      )
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      var data = value.toString().substring(0, 2);
+                      _language = data;
+                    },
+                    validatorFunction: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a Language';
+                      }
+                      return null;
+                    }),
+                InputField(
+                    textEditingController: _directorEditController,
+                    hintText: "Director",
+                    validatorFunction: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter director of the Movie';
+                      }
+                      return null;
+                    }),
+                InputField(
+                    textEditingController: _actorsEditController,
+                    hintText: "Actors",
+                    maxLines: 5,
+                    validatorFunction: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter actors of the Movie';
+                      }
+                      return null;
+                    }),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Select File',
+                        style: TextStyle(
+                          color: isDark(context) ? greyColor3 : greyColor2,
+                          fontSize: mf,
                         ),
                       ),
-                    ),
-                    !_isThumbnailFile
-                        ? const Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'Please select a Thumbnail Image',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 216, 14, 0),
-                                fontSize: 12,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 100,
+                          child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Flexible(
+                                child: FileCard(
+                                  onSelect: selectThumbnail,
+                                  name: 'Thumbnail',
+                                  file: _thumbnailFile,
+                                  fileUrl: widget.movieModel?.thumbnailURl,
+                                  isImg: true,
+                                ),
                               ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              // _prcessing
-              //     ? Padding(
-              //         padding: const EdgeInsets.symmetric(vertical: 30.0),
-              //         child: Text(
-              //           'Data Processing...',
-              //           style: TextStyle(
-              //             fontSize: mf,
-              //             color: mainColor,
-              //           ),
-              //           textAlign: TextAlign.center,
-              //         ),
-              //       )
-              //     : const SizedBox.shrink(),
-              widget.isUpdate
-                  ? _prcessing
-                      ? const SizedBox.shrink()
-                      : _dprcessing
+                              // Flexible(
+                              //   child: FileCard(
+                              //     onSelect: selectMovieFile,
+                              //     name: 'Movie File',
+                              //     file: _movieFile,
+                              //     fileUrl: widget.movieModel?.downloadID,
+                              //     isImg: false,
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      !_isThumbnailFile
                           ? const Padding(
-                              padding: EdgeInsets.only(
-                                top: 30.0,
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Please select a Thumbnail Image',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 216, 14, 0),
+                                  fontSize: 12,
+                                ),
                               ),
-                              child: Progressor(),
                             )
-                          : CustomButton(
-                              icon: Icons.delete,
-                              iconColor: Colors.white,
-                              name: 'Delete',
-                              onPressed: () {
-                                setState(() {
-                                  _dprcessing = true;
-                                });
-                                deleteData();
-                              },
-                              bgcolor: Colors.red,
-                              fontcolor: Colors.white,
-                            )
-                  : const SizedBox.shrink(),
-            ],
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                // _prcessing
+                //     ? Padding(
+                //         padding: const EdgeInsets.symmetric(vertical: 30.0),
+                //         child: Text(
+                //           'Data Processing...',
+                //           style: TextStyle(
+                //             fontSize: mf,
+                //             color: mainColor,
+                //           ),
+                //           textAlign: TextAlign.center,
+                //         ),
+                //       )
+                //     : const SizedBox.shrink(),
+                widget.isUpdate
+                    ? _prcessing
+                        ? const SizedBox.shrink()
+                        : _dprcessing
+                            ? const Padding(
+                                padding: EdgeInsets.only(
+                                  top: 30.0,
+                                ),
+                                child: Progressor(),
+                              )
+                            : CustomButton(
+                                icon: Icons.delete,
+                                iconColor: Colors.white,
+                                name: 'Delete',
+                                onPressed: () {
+                                  setState(() {
+                                    _dprcessing = true;
+                                  });
+                                  deleteData();
+                                },
+                                bgcolor: Colors.red,
+                                fontcolor: Colors.white,
+                              )
+                    : const SizedBox.shrink(),
+              ],
+            ),
           ),
         ),
       ),

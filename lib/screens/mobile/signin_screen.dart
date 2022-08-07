@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:moo/helper/colors.dart';
+import 'package:moo/helper/help_functions.dart';
 import 'package:moo/services/firebase.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -55,11 +56,13 @@ class _SignInScreenState extends State<SignInScreen> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: greenColor,
+                    color: isDark(context) ? whiteColor : greenColor,
                     width: 0.7,
                   )),
               child: Image.asset(
-                'assets/images/googlebtn.png',
+                isDark(context)
+                    ? 'assets/images/googlebtnwhite.png'
+                    : 'assets/images/googlebtn.png',
                 fit: BoxFit.contain,
                 width: size.width / 2,
               ),

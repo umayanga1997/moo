@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/raw_data.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 String formatBytes(int bytes, int decimals) {
@@ -23,4 +24,9 @@ String findLanguageValue(String key) {
 
 bool isDark(BuildContext context) {
   return context.read<ThemeController>().isDark;
+}
+
+void permissions() async {
+  var status = await Permission.storage.status;
+  if (status.isDenied) Permission.storage.request();
 }
