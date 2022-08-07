@@ -247,10 +247,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else if (!snapshot.hasData) {
                       return const Center(child: Text('Data not Found!'));
                     }
-                    List<MovieModel>? snapData = [];
-                    for (var element in snapshot.data!.docs) {
-                      snapData.add(MovieModel.fromJson(element.data()));
-                    }
+
+                    List<MovieModel>? snapData = snapshot.data!.docs
+                        .map((e) => MovieModel.fromJson(e.data()))
+                        .toList();
 
                     // With Filter
                     String cat =
