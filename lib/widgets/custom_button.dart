@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
-import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/help_functions.dart';
 
 class CustomButton extends StatelessWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moo/helper/colors.dart';
-import 'package:moo/helper/fonts.dart';
 import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
 import 'package:moo/screens/mobile/movie_details.dart';
