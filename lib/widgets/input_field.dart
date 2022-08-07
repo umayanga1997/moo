@@ -8,6 +8,7 @@ class InputField extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? paddingContent;
   final BorderSide? borderSide;
+  final FocusNode? focusNode;
   final Function(String)? onChanged;
   final bool? isDense;
   final String? Function(String?)? validatorFunction;
@@ -21,7 +22,8 @@ class InputField extends StatelessWidget {
       this.isDense,
       this.borderSide,
       this.onChanged,
-      this.paddingContent})
+      this.paddingContent,
+      this.focusNode})
       : super(key: key);
 
   @override
@@ -29,6 +31,7 @@ class InputField extends StatelessWidget {
     return Padding(
       padding: padding ?? const EdgeInsets.only(top: 10.0),
       child: TextFormField(
+        focusNode: focusNode,
         validator: validatorFunction ??
             (_) {
               return null;

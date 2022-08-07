@@ -10,6 +10,9 @@ import 'package:moo/helper/theme.dart';
 import 'package:moo/layouts/layout.dart';
 import 'package:provider/provider.dart';
 
+// Search Filed focus node
+FocusNode searchFocusNode = FocusNode();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -48,15 +51,20 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Moo',
-      theme: ThemeType().lightMode(),
-      darkTheme: ThemeType().darkMode(),
-      themeMode: context.watch<ThemeController>().isDark
-          ? ThemeMode.dark
-          : ThemeMode.light,
-      home: const Layout(),
-      debugShowCheckedModeBanner: false,
+    return GestureDetector(
+      onTap: () {
+        searchFocusNode.unfocus();
+      },
+      child: MaterialApp(
+        title: 'Moo',
+        theme: ThemeType().lightMode(),
+        darkTheme: ThemeType().darkMode(),
+        themeMode: context.watch<ThemeController>().isDark
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        home: const Layout(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

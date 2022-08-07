@@ -11,6 +11,7 @@ import 'package:moo/helper/colors.dart';
 import 'package:moo/helper/fonts.dart';
 import 'package:moo/helper/help_functions.dart';
 import 'package:moo/helper/raw_data.dart';
+import 'package:moo/main.dart';
 import 'package:moo/models/movie_model.dart';
 import 'package:moo/screens/mobile/about.dart';
 import 'package:moo/screens/mobile/movie_add_screen.dart';
@@ -206,6 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(width: 10.0),
                         Expanded(
                           child: InputField(
+                            focusNode: searchFocusNode,
                             textEditingController: _serachController,
                             padding: const EdgeInsets.all(0),
                             hintText: "Search...",
