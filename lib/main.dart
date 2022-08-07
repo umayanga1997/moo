@@ -8,7 +8,6 @@ import 'package:moo/controllers/theme_controller.dart';
 import 'package:moo/helper/help_functions.dart';
 import 'package:moo/helper/theme.dart';
 import 'package:moo/layouts/layout.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
