@@ -233,7 +233,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 StreamBuilder<QuerySnapshot>(
-                  stream: fireStore.collection('movies').snapshots(),
+                  stream: fireStore
+                      .collection('movies')
+                      .snapshots(includeMetadataChanges: true),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Progressor(

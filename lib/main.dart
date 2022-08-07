@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:moo/controllers/category_controller.dart';
 import 'package:moo/controllers/language_controller.dart';
 import 'package:moo/controllers/search_controller.dart';
@@ -12,7 +13,12 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FlutterDownloader.initialize();
+  // Splash Screen Remove
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // removeSplash();
+  // Check current theme mode of the mobile
+  var brightness = SchedulerBinding.instance.window.platformBrightness;
+  bool isDarkMode = brightness == Brightness.dark;
   runApp(
     MultiProvider(
       providers: [
@@ -23,7 +29,7 @@ void main() async {
           create: (context) => LanguageController(),
         ),
         ChangeNotifierProvider(
-          create: (context) => ThemeController(),
+          create: (context) => ThemeController(isDark: isDarkMode),
         ),
         ChangeNotifierProvider(
           create: (context) => SearchController(),
@@ -33,6 +39,11 @@ void main() async {
     ),
   );
 }
+
+// Future<void> removeSplash() async {
+//   Future.delayed(
+//       const Duration(seconds: 2), () => FlutterNativeSplash.remove());
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
